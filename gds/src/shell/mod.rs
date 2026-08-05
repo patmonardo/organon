@@ -37,7 +37,7 @@ pub use core::{
 pub use help::{ShellFold, ShellHelp, ShellHelpEntry, ShellMomentKind, ShellVocabKind};
 pub use moments::{ShellAddress, ShellAlgebra, ShellMoment, ShellPipeline, ShellRegister};
 pub use pipeline::{
-    ShellPipelineDescriptor, ShellPipelineFacade, ShellPipelineKind, ShellPureFormReturn,
+    ShellGdslReturn, ShellPipelineDescriptor, ShellPipelineFacade, ShellPipelineKind,
 };
 pub use procedure::{
     ShellPipelineProcedure, ShellProcedureBinding, ShellProcedureError, ShellProcedureEvaluator,

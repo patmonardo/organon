@@ -43,10 +43,10 @@ use crate::shell::ShellAlgebra;
 use crate::shell::ShellComponentExecutionKind;
 use crate::shell::ShellComponentMode;
 use crate::shell::ShellComponentPlan;
+use crate::shell::ShellGdslReturn;
 use crate::shell::ShellPipeline;
 use crate::shell::ShellPipelineDescriptor;
 use crate::shell::ShellPipelineFacade;
-use crate::shell::ShellPureFormReturn;
 use crate::shell::ShellRegister;
 use crate::task::frame::TaskFrame;
 use crate::task::frame::TaskFramePolicy;
@@ -59,7 +59,7 @@ use crate::task::spec::TaskWorkflow;
 use crate::types::graph_store::GraphViewSpec;
 
 #[derive(Debug, Clone)]
-pub struct GraphFramePureFormReciprocity {
+pub struct GraphFrameGdslReciprocity {
     view_spec: GraphViewSpec,
     shell_plan: ShellComponentPlan,
     shell_pipeline: ShellPipelineFacade,
@@ -69,7 +69,7 @@ pub struct GraphFramePureFormReciprocity {
 #[derive(Clone)]
 pub struct GraphExecutionIntent {
     store: SharedGraphStore,
-    reciprocity: GraphFramePureFormReciprocity,
+    reciprocity: GraphFrameGdslReciprocity,
     objective: TaskObjectiveRef,
     return_contract: TaskReturnContract,
     compute_steps: Vec<String>,
@@ -219,7 +219,7 @@ impl GraphExecutionIntent {
         self.reciprocity.shell_plan()
     }
 
-    pub fn reciprocity(&self) -> &GraphFramePureFormReciprocity {
+    pub fn reciprocity(&self) -> &GraphFrameGdslReciprocity {
         &self.reciprocity
     }
 
@@ -252,7 +252,7 @@ impl GraphExecutionIntent {
     }
 }
 
-impl GraphFramePureFormReciprocity {
+impl GraphFrameGdslReciprocity {
     pub fn view_spec(&self) -> &GraphViewSpec {
         &self.view_spec
     }
@@ -265,8 +265,8 @@ impl GraphFramePureFormReciprocity {
         &self.shell_pipeline
     }
 
-    pub fn pure_form_return(&self) -> ShellPureFormReturn {
-        self.shell_pipeline.pure_form_return()
+    pub fn gdsl_return(&self) -> ShellGdslReturn {
+        self.shell_pipeline.gdsl_return()
     }
 }
 
@@ -382,8 +382,8 @@ impl GraphFramePlan {
         compile_graph_form(&self.expressions, grammar)
     }
 
-    pub fn compile_pure_shell_plan(&self) -> Result<ShellComponentPlan, GraphFrameError> {
-        let mut plan = ShellComponentPlan::new(pure_form_shell_address());
+    pub fn compile_gdsl_shell_plan(&self) -> Result<ShellComponentPlan, GraphFrameError> {
+        let mut plan = ShellComponentPlan::new(gdsl_shell_address());
 
         for expression in &self.expressions {
             let GraphFrameExpr::Procedure(procedure) = expression else {
@@ -399,13 +399,11 @@ impl GraphFramePlan {
         Ok(plan)
     }
 
-    pub fn compile_pure_form_reciprocity(
-        &self,
-    ) -> Result<GraphFramePureFormReciprocity, GraphFrameError> {
+    pub fn compile_gdsl_reciprocity(&self) -> Result<GraphFrameGdslReciprocity, GraphFrameError> {
         let view_spec = self.compile_view_spec();
-        let shell_plan = self.compile_pure_shell_plan()?;
+        let shell_plan = self.compile_gdsl_shell_plan()?;
 
-        let mut descriptor = ShellPipelineDescriptor::new(pure_form_shell_address());
+        let mut descriptor = ShellPipelineDescriptor::new(gdsl_shell_address());
         if self.has_view_expressions() {
             descriptor = descriptor.with_immediate_body();
         }
@@ -413,7 +411,7 @@ impl GraphFramePlan {
             descriptor = descriptor.with_mediated_body();
         }
 
-        Ok(GraphFramePureFormReciprocity {
+        Ok(GraphFrameGdslReciprocity {
             view_spec,
             shell_plan,
             shell_pipeline: ShellPipelineFacade::new(descriptor),
@@ -421,7 +419,7 @@ impl GraphFramePlan {
     }
 
     pub fn compile_execution_intent(&self) -> Result<GraphExecutionIntent, GraphFrameError> {
-        let reciprocity = self.compile_pure_form_reciprocity()?;
+        let reciprocity = self.compile_gdsl_reciprocity()?;
         let objective =
             TaskObjectiveRef::new("graphstore", graph_view_identity(reciprocity.view_spec()));
         let persisted = self.expressions.iter().any(|expression| {
@@ -589,7 +587,7 @@ fn apply_view_expr(current: &GraphViewSpec, expression: &GraphViewExpr) -> Graph
     }
 }
 
-fn pure_form_shell_address() -> ShellAddress {
+fn gdsl_shell_address() -> ShellAddress {
     ShellAddress::new(
         ShellRegister::Unified,
         ShellPipeline::ModelFeaturePlan,

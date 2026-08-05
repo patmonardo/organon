@@ -19,10 +19,10 @@ use crate::task::progress::JobId;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::TaskRegistryFactory;
 use crate::task::progress::Tasks;
-use crate::task::runtime::TaskStage;
 use crate::task::runtime::TaskFrameKind;
 use crate::task::runtime::TaskFrameStorageBackend;
 use crate::task::runtime::TaskRuntime;
+use crate::task::runtime::TaskStage;
 
 use super::{
     ShellAddress, ShellAlgebra, ShellFold, ShellHelp, ShellMoment, ShellMomentKind, ShellPipeline,
@@ -302,7 +302,7 @@ pub struct ShellSemanticPipelineKnowledge {
     frame_ready: bool,
     middle_ready: bool,
     logic_frame_ready: bool,
-    pureform_return_ready: bool,
+    gdsl_return_ready: bool,
     semantic_feature_count: usize,
     semantic_feature_kinds: Vec<String>,
     capabilities: Vec<ShellSemanticCapability>,
@@ -322,7 +322,7 @@ impl ShellSemanticPipelineKnowledge {
             .any(|kind| kind == "principle");
 
         let logic_frame_ready = middle_ready && semantic_feature_count > 0 && has_concept;
-        let pureform_return_ready = logic_frame_ready && shell.program().is_some();
+        let gdsl_return_ready = logic_frame_ready && shell.program().is_some();
 
         let mut capabilities = Vec::new();
         if semantic_feature_count > 0 {
@@ -347,8 +347,8 @@ impl ShellSemanticPipelineKnowledge {
         if logic_frame_ready {
             evolution_path.push("logic_frame.ready".to_string());
         }
-        if pureform_return_ready {
-            evolution_path.push("pureform.return.ready".to_string());
+        if gdsl_return_ready {
+            evolution_path.push("gdsl.return.ready".to_string());
         }
 
         Self {
@@ -356,7 +356,7 @@ impl ShellSemanticPipelineKnowledge {
             frame_ready,
             middle_ready,
             logic_frame_ready,
-            pureform_return_ready,
+            gdsl_return_ready,
             semantic_feature_count,
             semantic_feature_kinds,
             capabilities,
@@ -380,8 +380,8 @@ impl ShellSemanticPipelineKnowledge {
         self.logic_frame_ready
     }
 
-    pub fn pureform_return_ready(&self) -> bool {
-        self.pureform_return_ready
+    pub fn gdsl_return_ready(&self) -> bool {
+        self.gdsl_return_ready
     }
 
     pub fn semantic_feature_count(&self) -> usize {
@@ -652,7 +652,7 @@ impl ShellCapabilityBand {
 pub enum ShellPlatformCapability {
     FrameRegister,
     DataPipeline,
-    PureFormReturn,
+    GdslReturn,
     ModelFeaturePlan,
     ProgressTracking,
     MemoryEstimation,
@@ -669,7 +669,7 @@ impl ShellPlatformCapability {
         match self {
             Self::FrameRegister => "frame-register",
             Self::DataPipeline => "data-pipeline",
-            Self::PureFormReturn => "pureform-return",
+            Self::GdslReturn => "gdsl-return",
             Self::ModelFeaturePlan => "model-feature-plan",
             Self::ProgressTracking => "progress-tracking",
             Self::MemoryEstimation => "memory-estimation",
@@ -1233,7 +1233,7 @@ impl ShellCapabilityMap {
             ),
             ShellCapabilityState::new(
                 ShellCapabilityBand::Immediate,
-                ShellPlatformCapability::PureFormReturn,
+                ShellPlatformCapability::GdslReturn,
                 true,
                 descriptor.has_metapipeline(),
             ),
@@ -1392,12 +1392,8 @@ pub struct GdsShell {
 }
 
 impl GdsShell {
-    const CANONICAL_PROJECTION_TRACE: [&'static str; 4] = [
-        "Frame",
-        "Model:Feature::Plan",
-        "LogicFrame",
-        "PureForm return",
-    ];
+    const CANONICAL_PROJECTION_TRACE: [&'static str; 4] =
+        ["Frame", "Model:Feature::Plan", "LogicFrame", "GDSL return"];
 
     pub fn new() -> Self {
         Self::default()
@@ -1861,8 +1857,8 @@ impl GdsShell {
         if semantic.logic_frame_ready() {
             observed_trace.push("LogicFrame".to_string());
         }
-        if semantic.pureform_return_ready() {
-            observed_trace.push("PureForm return".to_string());
+        if semantic.gdsl_return_ready() {
+            observed_trace.push("GDSL return".to_string());
         }
 
         let required_trace = Self::CANONICAL_PROJECTION_TRACE
@@ -1939,7 +1935,7 @@ impl GdsShell {
             semantic.frame_ready(),
             semantic.middle_ready(),
             semantic.logic_frame_ready(),
-            semantic.pureform_return_ready(),
+            semantic.gdsl_return_ready(),
         ]
         .into_iter()
         .filter(|ready| *ready)

@@ -55,7 +55,7 @@ pub use graph_form::{
 pub use graph_form::{validate_automation_shell_plan, GraphAutomationProfile};
 pub use lazy::{
     GraphAgentProcessingContract, GraphExecutionIntent, GraphFramePlan,
-    GraphFramePureFormReciprocity, GraphTaskDaemonRoute, GraphTaskDaemonSubmission,
+    GraphFrameGdslReciprocity, GraphTaskDaemonRoute, GraphTaskDaemonSubmission,
 };
 pub use model::{GraphFrameModelExt, GraphModelNameSpace};
 pub use plan::{GraphFramePlanExt, GraphPlanNameSpace};

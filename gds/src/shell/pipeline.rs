@@ -9,26 +9,26 @@ use super::{GdsShell, ShellAddress, ShellProgram, ShellSchema};
 /// Current Shell pipeline kind.
 ///
 /// The Shell is intentionally modeled as one data pipeline here. Future
-/// multipipeline work can add variants without changing the PureForm return.
+/// multipipeline work can add variants without changing the GDSL return.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ShellPipelineKind {
     DataPipeline,
 }
 
-/// Named return from Shell pipeline knowledge into PureForm.
+/// Named return from Shell pipeline knowledge into GDSL.
 ///
 /// Speculative status: this is the Shell's Knowledge return. The Shell gathers
 /// register, pipeline, schema, and program-feature determinations into a
-/// PureForm principle; an Agent does not produce that return so much as trap it
+/// principled form; an Agent does not produce that return so much as trap it
 /// as the knowledge available for its next act.
 #[derive(Debug, Clone, PartialEq, Eq)]
-pub struct ShellPureFormReturn {
+pub struct ShellGdslReturn {
     pipeline_kind: ShellPipelineKind,
     address: ShellAddress,
     principle: PureFormPrinciple,
 }
 
-impl ShellPureFormReturn {
+impl ShellGdslReturn {
     pub fn new(
         pipeline_kind: ShellPipelineKind,
         address: ShellAddress,
@@ -60,11 +60,11 @@ impl ShellPureFormReturn {
 
 /// Shell-level facade for pipeline/procedure execution intent.
 ///
-/// This is a thin snapshot over the shell descriptor and its PureForm return,
+/// This is a thin snapshot over the shell descriptor and its GDSL return,
 /// so callers can keep the orchestration boundary at Shell instead of reaching
 /// directly into program or evaluator internals. In the current speculative
 /// reading, this is also the place where an Agent can trap the Shell's
-/// PureForm/Knowledge return without claiming to define PureForm itself.
+/// GDSL/Knowledge return without claiming to define the full form language itself.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct ShellPipelineFacade {
     descriptor: ShellPipelineDescriptor,
@@ -83,8 +83,8 @@ impl ShellPipelineFacade {
         &self.descriptor
     }
 
-    pub fn pure_form_return(&self) -> ShellPureFormReturn {
-        self.descriptor.to_pure_form_return()
+    pub fn gdsl_return(&self) -> ShellGdslReturn {
+        self.descriptor.to_gdsl_return()
     }
 
     pub fn into_descriptor(self) -> ShellPipelineDescriptor {
@@ -161,11 +161,11 @@ impl ShellPipelineDescriptor {
         self.schema.is_some() || self.program.is_some() || self.has_mediated_body
     }
 
-    pub fn to_pure_form_principle(&self) -> PureFormPrinciple {
-        self.to_pure_form_return().into_principle()
+    pub fn to_gdsl_principle(&self) -> PureFormPrinciple {
+        self.to_gdsl_return().into_principle()
     }
 
-    pub fn to_pure_form_return(&self) -> ShellPureFormReturn {
+    pub fn to_gdsl_return(&self) -> ShellGdslReturn {
         let shape = Shape::new(
             self.schema
                 .as_ref()
@@ -188,7 +188,7 @@ impl ShellPipelineDescriptor {
 
         let morph = Morph::new(self.morph_patterns());
 
-        ShellPureFormReturn::new(
+        ShellGdslReturn::new(
             ShellPipelineKind::DataPipeline,
             self.address,
             PureFormPrinciple::new(shape, context, morph),
@@ -240,7 +240,7 @@ impl ShellPipelineDescriptor {
         if self.program.is_some() {
             order.push("shell.program".to_string());
         }
-        order.push("pureform.principle".to_string());
+        order.push("gdsl.principle".to_string());
         order
     }
 
@@ -293,14 +293,14 @@ mod tests {
         );
         assert_eq!(
             facade.descriptor().address(),
-            facade.pure_form_return().address()
+            facade.gdsl_return().address()
         );
         assert_eq!(
-            facade.pure_form_return().pipeline_kind(),
+            facade.gdsl_return().pipeline_kind(),
             ShellPipelineKind::DataPipeline
         );
         assert_eq!(
-            facade.pure_form_return().principle().morph.patterns,
+            facade.gdsl_return().principle().morph.patterns,
             vec!["algo.pagerank".to_string()]
         );
     }

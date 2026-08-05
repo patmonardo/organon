@@ -1,6 +1,6 @@
 //! GraphFrame core surface.
 //!
-//! GraphFrame is the graph-form half of a PureForm. It binds a GraphStore-backed
+//! GraphFrame is the graph-form half of an enterprise GDSL contract. It binds a GraphStore-backed
 //! view to an executable plan surface so a graph can be selected, filtered, and
 //! composed before control passes onward into shell execution. In this design,
 //! GraphFrame posits the graph-side division of control while TaskFrame carries
@@ -28,7 +28,7 @@ pub enum GraphFrameError {
     #[error("graph view construction failed: {0}")]
     View(#[from] GraphViewError),
 
-    #[error("PureShell plan compilation failed: {0}")]
+    #[error("GDSL shell plan compilation failed: {0}")]
     PureShell(#[from] ShellComponentPlanError),
 
     #[error(transparent)]
@@ -250,7 +250,7 @@ mod tests {
     }
 
     #[test]
-    fn graphframe_plan_compiles_procedures_to_pure_shell() {
+    fn graphframe_plan_compiles_procedures_to_gdsl_shell() {
         let frame = GraphFrame::from_store(random_store()).expect("frame should build");
         let plan = frame.procedure(
             GraphProcedureExpr::new("pagerank", ShellComponentMode::Stream)
@@ -258,8 +258,8 @@ mod tests {
         );
 
         let shell_plan = plan
-            .compile_pure_shell_plan()
-            .expect("PureShell plan should compile");
+            .compile_gdsl_shell_plan()
+            .expect("GDSL shell plan should compile");
 
         assert_eq!(shell_plan.len(), 1);
         assert_eq!(
@@ -283,8 +283,8 @@ mod tests {
 
         let view_spec = plan.compile_view_spec();
         let shell_plan = plan
-            .compile_pure_shell_plan()
-            .expect("PureShell plan should compile");
+            .compile_gdsl_shell_plan()
+            .expect("GDSL shell plan should compile");
 
         assert!(view_spec.relationship_types().contains(&relationship_type));
         assert_eq!(shell_plan.len(), 1);
@@ -306,7 +306,7 @@ mod tests {
     }
 
     #[test]
-    fn graphframe_compiles_pure_form_reciprocity() {
+    fn graphframe_compiles_gdsl_reciprocity() {
         let frame = GraphFrame::from_store(random_store()).expect("frame should build");
         let reciprocity = frame
             .select_relationship_type(RelationshipType::of("RELATES"))
@@ -314,20 +314,20 @@ mod tests {
                 "pagerank",
                 ShellComponentMode::Stats,
             ))
-            .compile_pure_form_reciprocity()
-            .expect("pure form reciprocity should compile");
+            .compile_gdsl_reciprocity()
+            .expect("gdsl reciprocity should compile");
 
         assert_eq!(reciprocity.shell_plan().len(), 1);
         assert!(
             reciprocity
-                .pure_form_return()
+                .gdsl_return()
                 .principle()
                 .context
                 .dependencies
                 .iter()
                 .any(|dep| dep == "dataframe")
                 || reciprocity
-                    .pure_form_return()
+                    .gdsl_return()
                     .principle()
                     .context
                     .dependencies
