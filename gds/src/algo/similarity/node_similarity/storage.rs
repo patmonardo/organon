@@ -209,8 +209,8 @@ fn build_vectors(
                     return;
                 }
 
-                let node_id = MappedNodeId::try_from(node)
-                    .expect("graph node index must fit MappedNodeId");
+                let node_id =
+                    MappedNodeId::try_from(node).expect("graph node index must fit MappedNodeId");
                 let mut pairs: Vec<(usize, f64)> = graph
                     .stream_relationships(node_id, fallback_weight)
                     .map(|cursor| {
@@ -256,8 +256,8 @@ fn build_vectors(
                     return;
                 }
 
-                let node_id = MappedNodeId::try_from(node)
-                    .expect("graph node index must fit MappedNodeId");
+                let node_id =
+                    MappedNodeId::try_from(node).expect("graph node index must fit MappedNodeId");
                 let mut neighbors: Vec<usize> = graph
                     .stream_relationships(node_id, fallback_weight)
                     .map(|cursor| {
@@ -296,8 +296,8 @@ fn enumerate_candidates(
     // Inverse traversal for each neighbor to find nodes that share that neighbor.
     // (This matches the classic two-hop candidate enumeration in Node Similarity.)
     for &neighbor in source_vector {
-        let neighbor_id = MappedNodeId::try_from(neighbor)
-            .expect("stored neighbor index must fit MappedNodeId");
+        let neighbor_id =
+            MappedNodeId::try_from(neighbor).expect("stored neighbor index must fit MappedNodeId");
         let inverse = graph.stream_inverse_relationships(neighbor_id, fallback_weight);
         for inv_rel in inverse {
             let potential_target = inv_rel.source_id();

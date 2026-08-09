@@ -163,7 +163,11 @@ impl AStarComputationRuntime {
     }
 
     /// Reconstruct path from target to source
-    pub fn reconstruct_path(&self, source: MappedNodeId, target: MappedNodeId) -> Option<Vec<MappedNodeId>> {
+    pub fn reconstruct_path(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+    ) -> Option<Vec<MappedNodeId>> {
         if !self.visited.contains(&target) {
             return None;
         }

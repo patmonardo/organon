@@ -3,11 +3,11 @@
 
 use crate::collections::HugeLongArray;
 use crate::core::utils::paged::HugeSerialIndirectMergeSort;
-use crate::task::memory::Estimate;
 use crate::ml::decision_tree::{
     FeatureBagger, Group, Groups, ImpurityCriterion, ImpurityData, Split,
 };
 use crate::ml::models::Features;
+use crate::task::memory::Estimate;
 
 pub struct Splitter<'a> {
     impurity_criterion: Box<dyn ImpurityCriterion>,

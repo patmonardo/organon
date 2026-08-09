@@ -1,9 +1,9 @@
 //! Top-K prediction driver for KGE.
 
-use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::queue::BoundedLongLongPriorityQueue;
-use crate::types::ValueType;
+use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::MappedNodeId;
+use crate::types::ValueType;
 use rayon::prelude::*;
 use std::collections::HashMap;
 use std::sync::Arc;

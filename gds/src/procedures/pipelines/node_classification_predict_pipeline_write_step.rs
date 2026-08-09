@@ -2,9 +2,9 @@ use crate::applications::algorithms::machinery::{
     GraphStoreNodePropertiesWritten, Label, WriteStep, WriteToDatabase,
 };
 use crate::applications::graph_store_catalog::loaders::ResultStore;
-use crate::task::progress::JobId;
 use crate::procedures::GraphFacade;
 use crate::projection::NodeLabel;
+use crate::task::progress::JobId;
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 
 use super::{

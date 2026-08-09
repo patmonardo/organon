@@ -7,10 +7,16 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
 use crate::applications::form::runtime::prepare_linked_form;
+use crate::applications::form::runtime::FormTaskJobReceipt;
 use crate::applications::form::runtime::FormVmOperationReceipt;
 use crate::form::FormVmEvidenceRef;
 use crate::form::ProgramSpec;
+use crate::form::{
+    FormControlCommand, FormControlReceipt, FormRunId, FormRunRegistry, FormRunRegistryError,
+    FormRunReport, InMemoryFormRunRegistry, ManagedFormRun,
+};
 use crate::projection::eval::algorithm::ExecutionMode;
+use crate::task::concurrency::TerminationFlag;
 use crate::types::catalog::GraphCatalog;
 
 use super::concept::{
@@ -18,20 +24,45 @@ use super::concept::{
     FormEvaluator, FormPreEvalTrace, MonadicEvaluationSlot, MonadicEvaluationState,
 };
 use super::mediation::{
-    apply_execution_plan, ProgramFormApplyBackend, ProgramFormApplyPrint, ProgramFormFailure,
+    apply_execution_plan, apply_task_job_receipt, ProgramFormApplyBackend, ProgramFormApplyPrint,
+    ProgramFormFailure,
 };
 
 /// Judgement layer: orchestrates Eval(Form) -> Apply(Form) -> Print.
-#[derive(Debug, Default)]
 pub struct ProgramFormApi {
     evaluator: FormEvaluator,
+    run_registry: Arc<dyn FormRunRegistry>,
 }
 
 impl ProgramFormApi {
     pub fn new() -> Self {
         Self {
             evaluator: FormEvaluator::new(),
+            run_registry: Arc::new(InMemoryFormRunRegistry::new()),
         }
+    }
+
+    pub fn with_run_registry(run_registry: Arc<dyn FormRunRegistry>) -> Self {
+        Self {
+            evaluator: FormEvaluator::new(),
+            run_registry,
+        }
+    }
+
+    pub fn inspect_run(&self, run_id: &FormRunId) -> Option<ManagedFormRun> {
+        self.run_registry.get(run_id)
+    }
+
+    /// Applies an operational control command to a managed Form run.
+    ///
+    /// The returned receipt records whether the command crossed the lifecycle
+    /// boundary; rejected commands are still rationally inspectable outcomes.
+    pub fn control_run(
+        &self,
+        run_id: &FormRunId,
+        command: FormControlCommand,
+    ) -> Result<FormControlReceipt, FormRunRegistryError> {
+        self.run_registry.control(run_id, command)
     }
 
     pub fn evaluate(&self, program: ProgramSpec) -> Result<FormEvalResult, FormProgramError> {
@@ -58,7 +89,7 @@ impl ProgramFormApi {
         let appearance = appearance_from_input(&default_input);
         let eval = self
             .evaluator
-            .evaluate_with_appearance(FormEvalRequest::new(program), appearance)
+            .evaluate_with_appearance(FormEvalRequest::new(program), appearance.clone())
             .map_err(FormProgramError::Evaluate)?;
 
         let mut vm_lifecycle = eval.vm_lifecycle;
@@ -71,14 +102,44 @@ impl ProgramFormApi {
             .begin_evaluation()
             .map_err(|error| FormProgramError::Evaluate(FormEvalError::Lifecycle(error)))?;
 
-        let runtime_preparation = prepare_linked_form(
+        let mut runtime_preparation = prepare_linked_form(
             &eval.executable,
             &default_input,
             &op_inputs,
             execution_mode,
+            &username,
             catalog.clone(),
         )
         .map_err(FormProgramError::Runtime)?;
+
+        let task_managed = runtime_preparation.task_submission().is_some();
+        let termination = TerminationFlag::running_true();
+        if task_managed {
+            self.run_registry
+                .register_active(
+                    ManagedFormRun::active(linked_form.form_id.clone(), vm_lifecycle.clone()),
+                    termination.clone(),
+                )
+                .map_err(|error| {
+                    FormProgramError::Runtime(format!(
+                        "run registry rejected active Form: {error:?}"
+                    ))
+                })?;
+        }
+
+        let task_job_receipt = if task_managed {
+            let graph_name = appearance.as_deref().ok_or_else(|| {
+                FormProgramError::Runtime(
+                    "task execution requires an appearance or graphName".to_string(),
+                )
+            })?;
+            runtime_preparation
+                .execute_task(graph_name, catalog.clone(), termination)
+                .map_err(FormProgramError::Runtime)?
+                .cloned()
+        } else {
+            None
+        };
         for receipt in &runtime_preparation.receipts {
             vm_lifecycle.record_operation_mediation(
                 receipt.operation_sequence,
@@ -88,17 +149,23 @@ impl ProgramFormApi {
                 ),
             );
         }
+        if let Some(receipt) = &task_job_receipt {
+            vm_lifecycle.add_evidence(FormVmEvidenceRef::new("task_job", receipt.job_id.clone()));
+        }
 
-        let apply = apply_execution_plan(
-            &eval.executable.operations,
-            &default_input,
-            &op_inputs,
-            &username,
-            execution_mode,
-            apply_backend,
-            fail_fast,
-            catalog,
-        )?;
+        let apply = match &task_job_receipt {
+            Some(receipt) => apply_task_job_receipt(&eval.executable.operations, receipt),
+            None => apply_execution_plan(
+                &eval.executable.operations,
+                &default_input,
+                &op_inputs,
+                &username,
+                execution_mode,
+                apply_backend,
+                fail_fast,
+                catalog,
+            )?,
+        };
 
         let monadic_state = if apply.failed.is_empty() {
             MonadicEvaluationState::Succeeded
@@ -106,15 +173,25 @@ impl ProgramFormApi {
             MonadicEvaluationState::Failed
         };
 
-        vm_lifecycle
-            .complete_evaluation(
-                apply.failed.is_empty(),
-                [
-                    FormVmEvidenceRef::new("executed_operations", apply.executed.len().to_string()),
-                    FormVmEvidenceRef::new("failed_operations", apply.failed.len().to_string()),
-                ],
-            )
-            .map_err(|error| FormProgramError::Evaluate(FormEvalError::Lifecycle(error)))?;
+        let completion_evidence = [
+            FormVmEvidenceRef::new("executed_operations", apply.executed.len().to_string()),
+            FormVmEvidenceRef::new("failed_operations", apply.failed.len().to_string()),
+        ];
+        if task_job_receipt
+            .as_ref()
+            .is_some_and(|receipt| receipt.state == "canceled")
+        {
+            for evidence in completion_evidence {
+                vm_lifecycle.add_evidence(evidence);
+            }
+            vm_lifecycle
+                .cancel()
+                .map_err(|error| FormProgramError::Evaluate(FormEvalError::Lifecycle(error)))?;
+        } else {
+            vm_lifecycle
+                .complete_evaluation(apply.failed.is_empty(), completion_evidence)
+                .map_err(|error| FormProgramError::Evaluate(FormEvalError::Lifecycle(error)))?;
+        }
 
         let mut pre_eval = eval.pre_eval;
         pre_eval.set_monadic_state(monadic_state.clone());
@@ -133,6 +210,49 @@ impl ProgramFormApi {
             apply.failed.is_empty(),
         );
 
+        let graph_contracts = runtime_preparation
+            .receipts
+            .iter()
+            .filter(|receipt| receipt.evidence_kind == "graph_processing_contract")
+            .map(|receipt| receipt.evidence_reference.clone())
+            .collect();
+        let task_frames = runtime_preparation
+            .receipts
+            .iter()
+            .filter(|receipt| receipt.evidence_kind == "task_frame")
+            .map(|receipt| receipt.evidence_reference.clone())
+            .collect();
+        let task_submissions = runtime_preparation
+            .receipts
+            .iter()
+            .filter(|receipt| receipt.evidence_kind == "task_daemon_submission")
+            .map(|receipt| receipt.evidence_reference.clone())
+            .collect();
+        let task_jobs = task_job_receipt
+            .iter()
+            .map(|receipt| receipt.job_id.clone())
+            .collect();
+        let managed_run = ManagedFormRun::returned(
+            linked_form.form_id.clone(),
+            vm_lifecycle.clone(),
+            graph_contracts,
+            task_frames,
+            task_submissions,
+            task_jobs,
+        );
+        let run_report = managed_run.report();
+        if task_managed {
+            self.run_registry.replace(managed_run).map_err(|error| {
+                FormProgramError::Runtime(format!(
+                    "run registry rejected Form completion: {error:?}"
+                ))
+            })?;
+        } else {
+            self.run_registry.register(managed_run).map_err(|error| {
+                FormProgramError::Runtime(format!("run registry rejected Form: {error:?}"))
+            })?;
+        }
+
         Ok(ProgramFormPrint {
             ok: apply.failed.is_empty(),
             backend: apply_backend,
@@ -150,6 +270,8 @@ impl ProgramFormApi {
             vm_lifecycle,
             linked_form,
             operation_receipts: runtime_preparation.receipts,
+            task_job_receipt,
+            run_report,
         })
     }
 
@@ -192,6 +314,12 @@ impl ProgramFormApi {
         request.default_input = session.default_input();
 
         self.evaluate_apply_print(request, catalog)
+    }
+}
+
+impl Default for ProgramFormApi {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -333,6 +461,8 @@ pub struct ProgramFormPrint {
     pub vm_lifecycle: crate::form::FormVmLifecycle,
     pub linked_form: LinkedFormPrint,
     pub operation_receipts: Vec<FormVmOperationReceipt>,
+    pub task_job_receipt: Option<FormTaskJobReceipt>,
+    pub run_report: FormRunReport,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

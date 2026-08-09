@@ -8,11 +8,11 @@ use crate::applications::algorithms::machinery::{
     AlgorithmProcessingTemplateConvenience, DefaultAlgorithmProcessingTemplate,
     FnStatsResultBuilder, FnStreamResultBuilder, ProgressTrackerCreator, RequestScopedDependencies,
 };
-use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::CatalogLoader;
 use crate::core::loading::GraphResources;
-use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::community::louvain::LouvainFacade;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::types::catalog::GraphCatalog;
 use serde_json::{json, Value};
 use std::sync::Arc;
@@ -129,14 +129,14 @@ pub fn handle_louvain(request: &Value, catalog: Arc<dyn GraphCatalog>) -> Value 
             let task = Tasks::leaf("louvain::stats".to_string()).base().clone();
 
             let compute = move |gr: &GraphResources,
-                                                                tracker: &mut dyn ProgressTracker,
-                                                                termination: &TerminationFlag|
+                                tracker: &mut dyn ProgressTracker,
+                                termination: &TerminationFlag|
                   -> Result<Option<Value>, String> {
                 let stats = gr
                     .facade()
                     .louvain()
                     .concurrency(concurrency_value)
-                                        .stats_with_context(tracker, termination)
+                    .stats_with_context(tracker, termination)
                     .map_err(|e| e.to_string())?;
                 let stats_value = serde_json::to_value(stats).map_err(|e| e.to_string())?;
                 Ok(Some(stats_value))

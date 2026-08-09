@@ -5,10 +5,10 @@
 use super::CELFComputationRuntime;
 use crate::collections::BitSet;
 use crate::collections::HugeDoubleArray;
-use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::core::utils::paged::HugeLongArrayStack;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;

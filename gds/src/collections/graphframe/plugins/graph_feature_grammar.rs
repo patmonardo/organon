@@ -113,7 +113,10 @@ mod tests {
                 GraphFeatureCardinality::One,
             ))
             .with_derivation(GraphFeatureDerivationRule::new(
-                vec![GraphFeatureAddress::new(GraphFeatureStratum::Edge, "weight")],
+                vec![GraphFeatureAddress::new(
+                    GraphFeatureStratum::Edge,
+                    "weight",
+                )],
                 GraphFeatureAddress::new(GraphFeatureStratum::Graph, "density"),
                 GraphFeatureDerivationKind::Aggregate,
                 true,
@@ -131,14 +134,20 @@ mod tests {
 
         let report = plugin.validate(&request).expect("plugin validation call");
         assert!(report.passed);
-        assert_eq!(report.facts.get("grammar_name"), Some(&"citation_graph".to_string()));
+        assert_eq!(
+            report.facts.get("grammar_name"),
+            Some(&"citation_graph".to_string())
+        );
     }
 
     #[test]
     fn plugin_reports_failure_for_invalid_form() {
         let plugin = GraphFeatureGrammarPlugin::new();
         let invalid = valid_form().with_derivation(GraphFeatureDerivationRule::new(
-            vec![GraphFeatureAddress::new(GraphFeatureStratum::Edge, "weight")],
+            vec![GraphFeatureAddress::new(
+                GraphFeatureStratum::Edge,
+                "weight",
+            )],
             GraphFeatureAddress::new(GraphFeatureStratum::Node, "pagerank"),
             GraphFeatureDerivationKind::Aggregate,
             true,
@@ -152,6 +161,9 @@ mod tests {
 
         let report = plugin.validate(&request).expect("plugin validation call");
         assert!(!report.passed);
-        assert_eq!(report.facts.get("error_class"), Some(&"TypeCollapse".to_string()));
+        assert_eq!(
+            report.facts.get("error_class"),
+            Some(&"TypeCollapse".to_string())
+        );
     }
 }

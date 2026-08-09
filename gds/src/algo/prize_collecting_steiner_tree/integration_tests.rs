@@ -4,7 +4,9 @@ use crate::algo::prize_collecting_steiner_tree::{
 use crate::task::progress::{TaskProgressTracker, Tasks};
 use crate::types::graph::MappedNodeId;
 
-fn create_neighbors(edges: Vec<Vec<(usize, f64)>>) -> impl Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)> {
+fn create_neighbors(
+    edges: Vec<Vec<(usize, f64)>>,
+) -> impl Fn(MappedNodeId) -> Vec<(MappedNodeId, f64)> {
     move |node: MappedNodeId| {
         let node = node
             .to_usize()

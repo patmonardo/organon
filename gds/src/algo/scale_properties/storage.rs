@@ -14,9 +14,9 @@ use crate::algo::algorithms::scaling::{
     CenterScaler, LogScaler, MaxScaler, MeanScaler, MinMaxScaler, NoneScaler, Scaler,
     StdScoreScaler,
 };
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::IdMap;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;

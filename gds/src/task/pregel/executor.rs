@@ -6,12 +6,12 @@
 use crate::collections::HugeAtomicBitSet;
 use crate::task::concurrency::install_with_concurrency;
 use crate::task::concurrency::Concurrency;
-use crate::task::progress::tasks::LeafTask;
 use crate::task::pregel::{
     projection::PropertyProjection, ComputeFn, DefaultValue, ForkJoinComputer, InitFn,
     MasterComputeContext, MessageIterator, Messenger, NodeValue, PregelComputer, PregelResult,
     PregelRuntimeConfig, PregelSchema,
 };
+use crate::task::progress::tasks::LeafTask;
 use crate::types::graph::Graph;
 use std::sync::Arc;
 

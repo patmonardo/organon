@@ -91,6 +91,7 @@ impl FormLinker {
         lowered_patterns.sort_by_key(|(_, _, (kind, _, _))| operation_phase(kind));
 
         for (pattern, source_application, (kind, status, rationale)) in lowered_patterns {
+            let derives_task_execution = matches!(kind, FormVmOperationKind::ConstituteTask { .. });
             let sequence = push_operation(
                 &mut operations,
                 Some(pattern.clone()),
@@ -106,6 +107,16 @@ impl FormLinker {
                 status,
                 rationale,
             });
+            if derives_task_execution {
+                push_operation(
+                    &mut operations,
+                    None,
+                    None,
+                    FormVmOperationKind::ExecuteTask {
+                        runtime: "graph-task-daemon".to_string(),
+                    },
+                );
+            }
         }
 
         let form_id = linked_form_id(program, &operations);
@@ -128,9 +139,10 @@ fn operation_phase(kind: &FormVmOperationKind) -> u8 {
         | FormVmOperationKind::DeferredCompatibility { .. } => 0,
         FormVmOperationKind::DetermineGraph { .. } => 1,
         FormVmOperationKind::ConstituteTask { .. } => 2,
-        FormVmOperationKind::InvokeOperator { .. } => 3,
-        FormVmOperationKind::CollectEvidence { .. } => 4,
-        FormVmOperationKind::ReturnForm { .. } => 5,
+        FormVmOperationKind::ExecuteTask { .. } => 3,
+        FormVmOperationKind::InvokeOperator { .. } => 4,
+        FormVmOperationKind::CollectEvidence { .. } => 5,
+        FormVmOperationKind::ReturnForm { .. } => 6,
     }
 }
 
@@ -328,6 +340,9 @@ mod tests {
         assert!(kinds
             .iter()
             .any(|kind| matches!(kind, FormVmOperationKind::ReturnForm { .. })));
+        assert!(kinds
+            .iter()
+            .any(|kind| matches!(kind, FormVmOperationKind::ExecuteTask { .. })));
         assert_eq!(linked.link_report.deferred_patterns, vec!["base.normalize"]);
         let determine = linked
             .operations

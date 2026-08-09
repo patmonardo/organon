@@ -21,8 +21,8 @@
 //! - Compact index mappings
 //! - Fast setup of integer lookup tables
 
-use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::{PageAllocator, PageAllocatorFactory};
+use crate::task::concurrency::Concurrency;
 use std::sync::Arc;
 
 /// Parallel page creator for i32 arrays.

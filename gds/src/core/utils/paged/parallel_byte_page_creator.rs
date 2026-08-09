@@ -21,8 +21,8 @@
 //! - Compact state machines
 //! - Fast setup of byte lookup tables
 
-use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::{PageAllocator, PageAllocatorFactory};
+use crate::task::concurrency::Concurrency;
 use std::sync::Arc;
 
 /// Parallel page creator for u8 arrays.

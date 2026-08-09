@@ -1,17 +1,17 @@
 use crate::collections::HugeLongArray;
-use crate::task::concurrency::Concurrency;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::TaskProgressTracker;
-use crate::task::memory::Estimate;
-use crate::task::memory::MemoryEstimation;
-use crate::task::memory::MemoryEstimations;
-use crate::task::memory::MemoryRange;
 use crate::ml::core::batch::DEFAULT_BATCH_SIZE;
 use crate::ml::metrics::classification::ClassificationMetric;
 use crate::ml::models::Classifier;
 use crate::ml::models::ClassifierFactory;
 use crate::ml::models::Features;
 use crate::ml::models::TrainerConfig;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::Estimate;
+use crate::task::memory::MemoryEstimation;
+use crate::task::memory::MemoryEstimations;
+use crate::task::memory::MemoryRange;
+use crate::task::progress::TaskProgressTracker;
 use std::sync::Arc;
 
 use super::parallel_classifier::ParallelNodeClassifier;

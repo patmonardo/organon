@@ -13,10 +13,10 @@ use super::{
     ScalarPropertyExtractor,
 };
 use crate::collections::HugeObjectArray;
-use crate::task::memory::Estimate;
 use crate::ml::core::batch::Batch;
 use crate::ml::core::functions::Constant;
 use crate::ml::core::Matrix;
+use crate::task::memory::Estimate;
 use crate::types::graph::Graph;
 use crate::types::ValueType;
 // use crate::collections::HugeObjectArray;

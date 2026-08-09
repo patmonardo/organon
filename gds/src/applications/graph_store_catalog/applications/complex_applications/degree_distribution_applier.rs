@@ -22,8 +22,8 @@ impl DegreeDistributionApplier {
         let mut hist: HashMap<u32, u64> = HashMap::new();
 
         for mapped in 0..node_count {
-            let mapped_node_id = MappedNodeId::try_from(mapped)
-                .expect("graph node count must fit mapped node IDs");
+            let mapped_node_id =
+                MappedNodeId::try_from(mapped).expect("graph node count must fit mapped node IDs");
             let deg = graph.degree(mapped_node_id);
             let key = u32::try_from(deg).expect("node degree must fit the histogram key");
             *hist.entry(key).or_insert(0) += 1;

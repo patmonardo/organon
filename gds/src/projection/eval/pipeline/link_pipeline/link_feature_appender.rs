@@ -89,7 +89,8 @@ mod tests {
         ) {
             // Test implementation: just write source + target as features
             for i in 0..self.dim {
-                link_features[offset + i] = (u64::from(source) + u64::from(target)) as f64 + i as f64;
+                link_features[offset + i] =
+                    (u64::from(source) + u64::from(target)) as f64 + i as f64;
             }
         }
 
@@ -122,7 +123,12 @@ mod tests {
         let mut features = vec![0.0; 5];
 
         // Append at offset 1
-        appender.append_features(MappedNodeId::new(10), MappedNodeId::new(20), &mut features, 1);
+        appender.append_features(
+            MappedNodeId::new(10),
+            MappedNodeId::new(20),
+            &mut features,
+            1,
+        );
 
         assert_eq!(features[0], 0.0); // Before offset - unchanged
         assert_eq!(features[1], 30.0); // 10 + 20 + 0
@@ -176,7 +182,12 @@ mod tests {
         };
         let mut features = vec![1.0, 2.0, 3.0];
 
-        appender.append_features(MappedNodeId::new(10), MappedNodeId::new(20), &mut features, 1);
+        appender.append_features(
+            MappedNodeId::new(10),
+            MappedNodeId::new(20),
+            &mut features,
+            1,
+        );
 
         // Zero-dimensional appender doesn't modify anything
         assert_eq!(features, vec![1.0, 2.0, 3.0]);

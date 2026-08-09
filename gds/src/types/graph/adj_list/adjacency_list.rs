@@ -33,7 +33,10 @@ impl AdjacencyList for RelationshipTopology {
         node: MappedNodeId,
         direction: TraversalDirection,
     ) -> Result<usize, NeighborCursorError> {
-        if node.to_usize().is_none_or(|index| index >= self.node_capacity()) {
+        if node
+            .to_usize()
+            .is_none_or(|index| index >= self.node_capacity())
+        {
             return Err(NeighborCursorError::NodeOutOfRange(node));
         }
 
@@ -69,11 +72,13 @@ mod tests {
 
     #[test]
     fn topology_partition_creates_reusable_semantic_cursors() {
-        let topology: Arc<dyn AdjacencyList> = Arc::new(RelationshipTopology::try_new(
-            vec![vec![MappedNodeId::new(1)], vec![]],
-            Some(vec![vec![], vec![MappedNodeId::ZERO]]),
-        )
-        .unwrap());
+        let topology: Arc<dyn AdjacencyList> = Arc::new(
+            RelationshipTopology::try_new(
+                vec![vec![MappedNodeId::new(1)], vec![]],
+                Some(vec![vec![], vec![MappedNodeId::ZERO]]),
+            )
+            .unwrap(),
+        );
 
         assert_eq!(
             topology.degree(MappedNodeId::ZERO, TraversalDirection::Outgoing),

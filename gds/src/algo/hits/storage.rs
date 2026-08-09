@@ -6,13 +6,13 @@
 //! - (eventually) termination and progress bridging
 
 use crate::algo::hits::HitsComputationRuntime;
-use crate::task::concurrency::Concurrency;
 use crate::config::{ConcurrencyConfig, Config, IterationsConfig, PregelRuntimeConfig};
 use crate::core::utils::partition::Partitioning;
-use crate::task::progress::ProgressTracker;
-use crate::task::pregel::{Pregel, SyncQueueMessenger};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
+use crate::task::concurrency::Concurrency;
+use crate::task::pregel::{Pregel, SyncQueueMessenger};
+use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
 use crate::types::prelude::GraphStore;
 use std::collections::HashSet;

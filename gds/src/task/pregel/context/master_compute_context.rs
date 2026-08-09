@@ -2,8 +2,8 @@
 //!
 //! Provides the master compute API for algorithm-level coordination.
 
-use crate::task::progress::tasks::LeafTask;
 use crate::task::pregel::{NodeValue, PregelRuntimeConfig};
+use crate::task::progress::tasks::LeafTask;
 use crate::types::graph::Graph;
 use std::sync::Arc;
 

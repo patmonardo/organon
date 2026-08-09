@@ -6,9 +6,11 @@
 pub mod link;
 pub mod operation;
 pub mod program;
+pub mod server;
 pub mod vm;
 
 pub use link::*;
 pub use operation::*;
 pub use program::*;
+pub use server::*;
 pub use vm::*;

@@ -62,8 +62,8 @@ impl DatabaseGraphEstimationService {
 mod tests {
     use super::*;
     use crate::applications::graph_store_catalog::loaders::TransactionContext;
-    use crate::task::concurrency::TerminationFlag;
     use crate::core::graph_dimensions::GraphDimensions;
+    use crate::task::concurrency::TerminationFlag;
     use crate::types::graph_store::DatabaseId;
 
     #[derive(Clone, Debug)]

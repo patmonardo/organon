@@ -4,8 +4,8 @@
 //! suitable for large graphs without relying on recursion.
 
 use crate::collections::HugeLongArray;
-use crate::task::concurrency::TerminationFlag;
 use crate::core::utils::paged::HugeLongArrayStack;
+use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
@@ -80,9 +80,9 @@ impl SccComputationRuntime {
                 .stream_relationships(mapped_start, fallback)
                 .map(|c| c.target_id())
                 .map(|target| {
-                    target
-                        .to_usize()
-                        .ok_or_else(|| format!("mapped target {target} exceeds the dense index domain"))
+                    target.to_usize().ok_or_else(|| {
+                        format!("mapped target {target} exceeds the dense index domain")
+                    })
                 })
                 .collect::<Result<_, _>>()?;
             frames.push(Frame {
@@ -111,17 +111,14 @@ impl SccComputationRuntime {
                         stack.push(w as i64);
                         boundaries.push(index.get(w));
 
-                        let mapped_w = MappedNodeId::try_from(w).map_err(|_| {
-                            format!("node index {w} exceeds the mapped ID domain")
-                        })?;
+                        let mapped_w = MappedNodeId::try_from(w)
+                            .map_err(|_| format!("node index {w} exceeds the mapped ID domain"))?;
                         let w_neighbors: Vec<usize> = graph
                             .stream_relationships(mapped_w, fallback)
                             .map(|c| c.target_id())
                             .map(|target| {
                                 target.to_usize().ok_or_else(|| {
-                                    format!(
-                                        "mapped target {target} exceeds the dense index domain"
-                                    )
+                                    format!("mapped target {target} exceeds the dense index domain")
                                 })
                             })
                             .collect::<Result<_, _>>()?;

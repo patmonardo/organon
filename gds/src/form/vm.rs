@@ -34,6 +34,7 @@ pub enum FormVmLifecycleState {
     ReadyForEvaluation,
     Evaluating,
     Returned,
+    Canceled,
     Faulted,
 }
 
@@ -44,6 +45,7 @@ pub enum FormVmOutcome {
     ReadyForEvaluation,
     Succeeded,
     Failed,
+    Canceled,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -62,6 +64,8 @@ pub enum FormVmLifecycleEventKind {
     EvaluationStarted,
     EvaluationCompleted,
     FormReturned,
+    CancellationRequested,
+    FormCanceled,
     Faulted(String),
 }
 
@@ -190,6 +194,25 @@ impl FormVmLifecycle {
             FormVmOutcome::Failed
         };
         self.record(FormVmLifecycleEventKind::FormReturned);
+        Ok(())
+    }
+
+    pub fn cancel(&mut self) -> Result<(), FormVmLifecycleError> {
+        if matches!(
+            self.state,
+            FormVmLifecycleState::Returned
+                | FormVmLifecycleState::Canceled
+                | FormVmLifecycleState::Faulted
+        ) {
+            return Err(FormVmLifecycleError::InvalidTransition {
+                from: self.state,
+                to: FormVmLifecycleState::Canceled,
+            });
+        }
+        self.record(FormVmLifecycleEventKind::CancellationRequested);
+        self.state = FormVmLifecycleState::Canceled;
+        self.outcome = FormVmOutcome::Canceled;
+        self.record(FormVmLifecycleEventKind::FormCanceled);
         Ok(())
     }
 

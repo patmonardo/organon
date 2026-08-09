@@ -88,7 +88,13 @@ struct SameCategoryLongAppender {
 }
 
 impl LinkFeatureAppender for SameCategoryLongAppender {
-    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        link_features: &mut [f64],
+        offset: usize,
+    ) {
         let source_val = match self.props.long_value(u64::from(source)) {
             Ok(val) => val,
             Err(_) => {
@@ -118,7 +124,13 @@ struct SameCategoryDoubleAppender {
 }
 
 impl LinkFeatureAppender for SameCategoryDoubleAppender {
-    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        link_features: &mut [f64],
+        offset: usize,
+    ) {
         let source_val = match self.props.double_value(u64::from(source)) {
             Ok(val) => val,
             Err(_) => {

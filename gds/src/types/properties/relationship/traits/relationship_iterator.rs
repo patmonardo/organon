@@ -263,10 +263,7 @@ mod tests {
             edges: vec![(node(5), node(6), 1.0)],
         };
         assert!(iter.exists(node(5), node(6)));
-        assert!(iter
-            .stream_relationships(node(4), 0.0)
-            .next()
-            .is_none());
+        assert!(iter.stream_relationships(node(4), 0.0).next().is_none());
     }
 
     #[test]

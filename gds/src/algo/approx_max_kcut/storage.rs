@@ -6,10 +6,10 @@
 
 use super::spec::{ApproxMaxKCutConfig, ApproxMaxKCutResult};
 use super::ApproxMaxKCutComputationRuntime;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::ProgressTracker;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::ProgressTracker;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
 use std::collections::HashSet;
@@ -67,7 +67,10 @@ impl ApproxMaxKCutStorageRuntime {
 
             for cursor in graph_view.stream_relationships(mapped_node_id, default_weight) {
                 let target = cursor.target_id().to_usize().ok_or_else(|| {
-                    format!("mapped target {} exceeds the dense index domain", cursor.target_id())
+                    format!(
+                        "mapped target {} exceeds the dense index domain",
+                        cursor.target_id()
+                    )
                 })?;
 
                 let weight = if config.has_relationship_weight_property {

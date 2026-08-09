@@ -1,9 +1,9 @@
 use super::spec::{ConductanceConfig, ConductanceResult};
 use super::ConductanceComputationRuntime;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::ProgressTracker;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::ProgressTracker;
 use crate::types::prelude::GraphStore;
 use crate::types::properties::node::NodePropertyValues;
 use std::collections::HashSet;

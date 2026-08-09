@@ -9,11 +9,11 @@
 //! - Abstract interface with concrete ForkJoin implementation
 
 use crate::collections::HugeAtomicBitSet;
-use crate::task::progress::tasks::LeafTask;
 use crate::task::pregel::{
     ComputeFn, ForkJoinComputeStep, InitFn, MessageIterator, Messenger, NodeValue, Partition,
     PregelRuntimeConfig,
 };
+use crate::task::progress::tasks::LeafTask;
 use crate::types::graph::Graph;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;

@@ -17,7 +17,6 @@ pub trait PartialIdMap: Send + Sync {
     fn root_node_count(&self) -> Option<usize> {
         None
     }
-
 }
 
 /// Empty partial mapping used as a safe default. It never maps any identifiers.

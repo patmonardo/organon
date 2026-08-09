@@ -98,10 +98,8 @@ mod tests {
 
         assert!(values.long_value(0).is_err());
 
-        let integral = DefaultDoubleNodePropertyValues::from_collection(
-            VecDouble::from(vec![2.0]),
-            1,
-        );
+        let integral =
+            DefaultDoubleNodePropertyValues::from_collection(VecDouble::from(vec![2.0]), 1);
         assert_eq!(integral.long_value(0).unwrap(), 2);
     }
 }

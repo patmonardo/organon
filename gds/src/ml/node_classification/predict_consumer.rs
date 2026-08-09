@@ -1,11 +1,11 @@
 use crate::collections::HugeLongArray;
 use crate::collections::HugeObjectArray;
-use crate::task::progress::ProgressTracker;
-use crate::task::progress::TaskProgressTracker;
 use crate::ml::core::batch::Batch;
 use crate::ml::core::batch::BatchTransformer;
 use crate::ml::models::Classifier;
 use crate::ml::models::Features;
+use crate::task::progress::ProgressTracker;
+use crate::task::progress::TaskProgressTracker;
 use std::sync::Arc;
 use std::sync::Mutex;
 

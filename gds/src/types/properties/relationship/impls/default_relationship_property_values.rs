@@ -62,10 +62,7 @@ mod tests {
 
         assert_eq!(values.value_type(), ValueType::Double);
         assert_eq!(values.element_count(), 3); // Use element_count from PropertyValues trait
-        assert_eq!(
-            values.double_value(RelationshipIndex::new(1)).unwrap(),
-            2.5
-        );
+        assert_eq!(values.double_value(RelationshipIndex::new(1)).unwrap(), 2.5);
         assert_eq!(values.default_value(), 0.0);
         assert!(values.has_value(RelationshipIndex::ZERO));
         assert!(!values.has_value(RelationshipIndex::new(10)));

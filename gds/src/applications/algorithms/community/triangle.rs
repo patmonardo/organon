@@ -7,11 +7,11 @@ use crate::applications::algorithms::machinery::{
     AlgorithmProcessingTemplateConvenience, DefaultAlgorithmProcessingTemplate,
     FnStatsResultBuilder, FnStreamResultBuilder, ProgressTrackerCreator, RequestScopedDependencies,
 };
-use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::CatalogLoader;
 use crate::core::loading::GraphResources;
-use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::community::triangle::TriangleFacade;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::types::catalog::GraphCatalog;
 use serde_json::{json, Value};
 use std::sync::Arc;

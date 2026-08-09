@@ -182,6 +182,11 @@ impl TerminationFlag {
     pub fn terminate(&self) -> ! {
         panic!("{}", TerminatedException);
     }
+
+    /// Requests cooperative cancellation without panicking the calling control thread.
+    pub fn request_termination(&self) {
+        self.inner.cached_running.store(false, Ordering::Release);
+    }
 }
 
 // Convenience constructors

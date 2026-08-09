@@ -1,5 +1,5 @@
-use crate::task::concurrency::Concurrency;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::Concurrency;
 use serde::{Deserialize, Serialize};
 use std::collections::HashSet;
 

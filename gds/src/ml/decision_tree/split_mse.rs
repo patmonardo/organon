@@ -2,8 +2,8 @@
 //!
 
 use crate::collections::{HugeDoubleArray, HugeLongArray};
-use crate::task::memory::Estimate;
 use crate::ml::decision_tree::{ImpurityCriterion, ImpurityData, ImpurityDataAny};
+use crate::task::memory::Estimate;
 use std::any::Any;
 use std::sync::Arc;
 

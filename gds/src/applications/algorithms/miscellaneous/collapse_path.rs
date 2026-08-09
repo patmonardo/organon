@@ -1,9 +1,9 @@
 //! CollapsePath dispatch handler.
 
 use crate::applications::algorithms::miscellaneous::err;
-use crate::task::concurrency::Concurrency;
 use crate::core::loading::CatalogLoader;
 use crate::procedures::miscellaneous::CollapsePathFacade;
+use crate::task::concurrency::Concurrency;
 use crate::types::catalog::GraphCatalog;
 use crate::types::prelude::GraphStore;
 use serde_json::{json, Value};

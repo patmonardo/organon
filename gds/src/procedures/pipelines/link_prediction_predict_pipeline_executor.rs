@@ -1,11 +1,11 @@
 use std::sync::Arc;
 
-use crate::task::concurrency::{Concurrency, TerminationFlag};
-use crate::task::progress::{Task, TaskProgressTracker, Tasks};
 use crate::ml::link_models::LinkPredictionResult;
 use crate::ml::models::Classifier;
 use crate::projection::eval::pipeline::link_pipeline::LinkPredictionPredictPipeline;
 use crate::projection::eval::pipeline::PredictPipelineExecutorError;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{Task, TaskProgressTracker, Tasks};
 use crate::types::graph_store::{DefaultGraphStore, GraphStore};
 
 use super::LinkPredictionPredictPipelineConfig;

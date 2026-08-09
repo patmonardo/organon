@@ -1,14 +1,14 @@
 use std::sync::Arc;
 
 use crate::applications::algorithms::machinery::AlgorithmMachinery;
-use crate::task::concurrency::Concurrency;
-use crate::task::progress::tasks::NoopProgressTracker;
 use crate::projection::eval::pipeline::link_pipeline::{
     LinkPredictionTrainConfig, LinkPredictionTrainPipelineResult,
 };
 use crate::projection::eval::pipeline::validate_main_metric;
 use crate::projection::eval::pipeline::PipelineTrainAlgorithmError;
 use crate::projection::eval::pipeline::TrainingPipeline;
+use crate::task::concurrency::Concurrency;
+use crate::task::progress::tasks::NoopProgressTracker;
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::user::User;
 

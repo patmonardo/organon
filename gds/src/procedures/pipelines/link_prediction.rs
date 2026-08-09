@@ -1,7 +1,7 @@
-use crate::task::progress::ProgressTracker;
 use crate::ml::link_models::LinkPredictionResult;
 use crate::ml::models::Classifier;
 use crate::projection::eval::pipeline::link_pipeline::LinkFeatureExtractor;
+use crate::task::progress::ProgressTracker;
 
 use super::link_prediction_similarity_computer::LinkPredictionSimilarityComputer;
 

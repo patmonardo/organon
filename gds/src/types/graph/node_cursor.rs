@@ -51,9 +51,7 @@ impl MappedNodeRangeCursor {
 
 impl NodeCursor for MappedNodeRangeCursor {
     fn reset(&mut self, start: MappedNodeId, length: usize) -> Result<(), NodeCursorError> {
-        let end = start
-            .to_usize()
-            .and_then(|start| start.checked_add(length));
+        let end = start.to_usize().and_then(|start| start.checked_add(length));
         if end.is_none_or(|end| end > self.node_count) {
             return Err(NodeCursorError {
                 start,

@@ -4,13 +4,13 @@ use super::ConductanceComputationRuntime;
 use super::ConductanceStorageRuntime;
 // progress_task helper removed; construct a local base task when needed
 // use crate::algo::conductance::progress_task;
+use crate::config::GraphStoreConfig;
+use crate::projection::RelationshipType;
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
-use crate::config::GraphStoreConfig;
 use crate::task::progress::EmptyTaskRegistryFactory;
 use crate::task::progress::JobId;
 use crate::task::progress::TaskProgressTracker;
-use crate::projection::RelationshipType;
 use crate::types::graph::MappedNodeId;
 use crate::types::graph::RelationshipTopology;
 use crate::types::graph::SimpleIdMap;
@@ -38,9 +38,10 @@ fn make_store(outgoing: Vec<Vec<MappedNodeId>>) -> DefaultGraphStore {
     let capabilities = Capabilities::default();
 
     // Simple id_map with nodes 0..node_count.
-    let id_map = SimpleIdMap::from_original_ids((0..node_count).map(|node| {
-        i64::try_from(node).expect("fixture node must fit original ID space")
-    }));
+    let id_map = SimpleIdMap::from_original_ids(
+        (0..node_count)
+            .map(|node| i64::try_from(node).expect("fixture node must fit original ID space")),
+    );
 
     let topology = RelationshipTopology::new(outgoing, None);
 

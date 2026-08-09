@@ -1,10 +1,10 @@
 //! SCC Storage Runtime
 
 use super::{SccComputationResult, SccComputationRuntime};
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::ProgressTracker;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::ProgressTracker;
 use crate::types::prelude::GraphStore;
 use std::collections::HashSet;
 use std::time::Instant;

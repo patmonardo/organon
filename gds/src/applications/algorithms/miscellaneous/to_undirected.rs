@@ -5,10 +5,10 @@ use crate::applications::algorithms::machinery::{
     FnStatsResultBuilder, ProgressTrackerCreator, RequestScopedDependencies,
 };
 use crate::applications::algorithms::miscellaneous::{err, timings_json};
-use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::core::loading::{CatalogLoader, GraphResources};
-use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::miscellaneous::ToUndirectedFacade;
+use crate::task::concurrency::{Concurrency, TerminationFlag};
+use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::types::catalog::GraphCatalog;
 use crate::types::prelude::GraphStore;
 use serde_json::{json, Value};

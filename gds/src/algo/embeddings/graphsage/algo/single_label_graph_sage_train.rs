@@ -15,9 +15,9 @@ use crate::algo::embeddings::graphsage::train_config_transformer::TrainConfigTra
 use crate::algo::embeddings::graphsage::types::{
     AggregatorType, GraphSageTrainConfig, GraphSageTrainParameters,
 };
-use crate::task::concurrency::TerminationFlag;
 use crate::core::model::Model;
 use crate::ml::core::tensor::{Matrix, Vector};
+use crate::task::concurrency::TerminationFlag;
 use crate::types::graph::Graph;
 use std::sync::Arc;
 

@@ -1,10 +1,10 @@
 //! WCC Storage Runtime
 
 use super::{WccComputationResult, WccComputationRuntime};
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::ProgressTracker;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::ProgressTracker;
 use crate::types::prelude::GraphStore;
 use std::collections::HashSet;
 

@@ -2,8 +2,8 @@
 
 mod batch_node_iterable;
 mod filtered_id_map;
-mod ids;
 mod id_map;
+mod ids;
 mod node_iterator;
 mod partial_id_map;
 mod simple;

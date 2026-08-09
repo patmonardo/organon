@@ -1,7 +1,7 @@
 use super::Updater;
-use crate::task::memory::Estimate;
 use crate::ml::core::functions::Weights;
 use crate::ml::core::Tensor;
+use crate::task::memory::Estimate;
 use std::sync::Arc;
 
 const CLIP_MAX: f64 = 5.0;

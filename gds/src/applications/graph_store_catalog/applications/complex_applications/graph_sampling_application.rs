@@ -82,9 +82,9 @@ impl GraphSamplingApplication {
         for mapped_index in 0..graph.node_count() {
             let mapped_id = MappedNodeId::try_from(mapped_index)
                 .map_err(|_| "Graph node count exceeds mapped ID space".to_string())?;
-            let original_id = graph.to_original_node_id(mapped_id).ok_or_else(|| {
-                format!("No original node ID for mapped node {mapped_id}")
-            })?;
+            let original_id = graph
+                .to_original_node_id(mapped_id)
+                .ok_or_else(|| format!("No original node ID for mapped node {mapped_id}"))?;
             original_ids.push(original_id);
         }
 

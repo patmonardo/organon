@@ -1,7 +1,7 @@
 //! Per-database user log store implementation.
 
-use crate::task::progress::Task;
 use crate::core::utils::warnings::{log_store::LogStore, UserLogEntry, UserLogStore};
+use crate::task::progress::Task;
 use std::collections::HashMap;
 use std::sync::RwLock;
 

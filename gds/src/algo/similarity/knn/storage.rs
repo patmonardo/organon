@@ -1,10 +1,10 @@
 use super::metrics::{KnnNodePropertySpec, SimilarityComputer, SimilarityMetric};
 use super::{KnnComputationResult, KnnComputationRuntime, KnnNnDescentConfig, KnnNnDescentStats};
+use crate::ml::core::samplers::RandomWalkSampler;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::virtual_threads::Executor;
 use crate::task::concurrency::{Concurrency, TerminationFlag};
 use crate::task::progress::ProgressTracker;
-use crate::ml::core::samplers::RandomWalkSampler;
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::MappedNodeId;
 use crate::types::graph_store::GraphStore;
 use crate::types::properties::node::NodePropertyValues;

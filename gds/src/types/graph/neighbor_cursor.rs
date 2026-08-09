@@ -147,7 +147,10 @@ impl NeighborCursor for TopologyNeighborCursor {
         node: MappedNodeId,
         direction: TraversalDirection,
     ) -> Result<(), NeighborCursorError> {
-        if node.to_usize().is_none_or(|index| index >= self.topology.node_capacity()) {
+        if node
+            .to_usize()
+            .is_none_or(|index| index >= self.topology.node_capacity())
+        {
             return Err(NeighborCursorError::NodeOutOfRange(node));
         }
         if direction == TraversalDirection::Incoming && !self.topology.is_inverse_indexed() {
@@ -191,17 +194,16 @@ mod tests {
     use super::*;
 
     fn topology() -> Arc<RelationshipTopology> {
-        Arc::new(RelationshipTopology::try_new(
-            vec![
-                vec![MappedNodeId::new(1), MappedNodeId::new(1)],
-                vec![],
-            ],
-            Some(vec![
-                vec![],
-                vec![MappedNodeId::new(0), MappedNodeId::new(0)],
-            ]),
+        Arc::new(
+            RelationshipTopology::try_new(
+                vec![vec![MappedNodeId::new(1), MappedNodeId::new(1)], vec![]],
+                Some(vec![
+                    vec![],
+                    vec![MappedNodeId::new(0), MappedNodeId::new(0)],
+                ]),
+            )
+            .unwrap(),
         )
-        .unwrap())
     }
 
     #[test]
@@ -243,11 +245,15 @@ mod tests {
             .unwrap();
 
         assert_eq!(
-            cursor.advance_by(0).map(|neighbor| neighbor.relationship_index),
+            cursor
+                .advance_by(0)
+                .map(|neighbor| neighbor.relationship_index),
             Some(RelationshipIndex::ZERO)
         );
         assert_eq!(
-            cursor.advance_by(0).map(|neighbor| neighbor.relationship_index),
+            cursor
+                .advance_by(0)
+                .map(|neighbor| neighbor.relationship_index),
             Some(RelationshipIndex::new(1))
         );
         assert_eq!(cursor.advance_by(0), None);
@@ -255,28 +261,32 @@ mod tests {
 
     #[test]
     fn target_navigation_uses_the_adjacent_endpoint() {
-        let topology = Arc::new(RelationshipTopology::try_new(
-            vec![
-                vec![MappedNodeId::new(1), MappedNodeId::new(3)],
-                vec![MappedNodeId::new(3)],
-                vec![],
-                vec![],
-            ],
-            Some(vec![
-                vec![],
-                vec![MappedNodeId::ZERO],
-                vec![],
-                vec![MappedNodeId::ZERO, MappedNodeId::new(1)],
-            ]),
-        )
-        .unwrap());
+        let topology = Arc::new(
+            RelationshipTopology::try_new(
+                vec![
+                    vec![MappedNodeId::new(1), MappedNodeId::new(3)],
+                    vec![MappedNodeId::new(3)],
+                    vec![],
+                    vec![],
+                ],
+                Some(vec![
+                    vec![],
+                    vec![MappedNodeId::ZERO],
+                    vec![],
+                    vec![MappedNodeId::ZERO, MappedNodeId::new(1)],
+                ]),
+            )
+            .unwrap(),
+        );
         let mut cursor = TopologyNeighborCursor::new(topology);
 
         cursor
             .reset(MappedNodeId::ZERO, TraversalDirection::Outgoing)
             .unwrap();
         assert_eq!(
-            cursor.advance(MappedNodeId::new(2)).map(|neighbor| neighbor.target),
+            cursor
+                .advance(MappedNodeId::new(2))
+                .map(|neighbor| neighbor.target),
             Some(MappedNodeId::new(3))
         );
         assert_eq!(cursor.peek_neighbor(), None);
@@ -286,7 +296,9 @@ mod tests {
             .reset(MappedNodeId::new(3), TraversalDirection::Incoming)
             .unwrap();
         assert_eq!(
-            cursor.skip_until(MappedNodeId::ZERO).map(|neighbor| neighbor.source),
+            cursor
+                .skip_until(MappedNodeId::ZERO)
+                .map(|neighbor| neighbor.source),
             Some(MappedNodeId::new(1))
         );
         assert_eq!(cursor.peek_neighbor(), None);

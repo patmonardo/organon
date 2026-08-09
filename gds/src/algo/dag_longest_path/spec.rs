@@ -94,12 +94,7 @@ fn result_paths(result: &DagLongestPathResult) -> Vec<PathResult> {
         .map(|row| PathResult {
             source: checked_u64(row.source_node),
             target: checked_u64(row.target_node),
-            path: row
-                .node_ids
-                .iter()
-                .copied()
-                .map(checked_u64)
-                .collect(),
+            path: row.node_ids.iter().copied().map(checked_u64).collect(),
             cost: row.total_cost,
         })
         .collect()

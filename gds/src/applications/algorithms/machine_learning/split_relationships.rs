@@ -5,9 +5,9 @@
 //! Note: mutate/write behavior (writing relationships back into the GraphStore) is still
 //! pending; we currently return counts only.
 
-use crate::task::concurrency::Concurrency;
 use crate::ml::splitting::SplitRelationshipsConfig;
 use crate::procedures::machine_learning::SplitRelationshipsFacade;
+use crate::task::concurrency::Concurrency;
 use crate::types::catalog::GraphCatalog;
 use serde_json::{json, Value};
 use std::sync::Arc;

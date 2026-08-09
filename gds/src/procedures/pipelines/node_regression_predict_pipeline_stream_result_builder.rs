@@ -2,8 +2,8 @@ use crate::applications::algorithms::machinery::StreamResultBuilder;
 use crate::core::loading::GraphResources;
 use crate::procedures::pipelines::types::NodeRegressionStreamResult;
 use crate::procedures::pipelines::NodeRegressionPipelineResult;
-use crate::types::graph_store::GraphStore;
 use crate::types::graph::MappedNodeId;
+use crate::types::graph_store::GraphStore;
 
 pub struct NodeRegressionPredictPipelineStreamResultBuilder;
 

@@ -31,9 +31,9 @@ use crate::projection::eval::pipeline::{
 use crate::projection::eval::pipeline::{NodePropertyStep, PipelineCatalogEntry};
 use crate::task::concurrency::Concurrency;
 use crate::task::memory::{MemoryEstimationResult, MemoryRange, MemoryTree};
-use crate::task::runtime::TaskStage;
 use crate::task::runtime::TaskFrameKind;
 use crate::task::runtime::TaskFrameStorageBackend;
+use crate::task::runtime::TaskStage;
 use crate::types::catalog::{GraphCatalog, InMemoryGraphCatalog};
 use crate::types::graph_store::DefaultGraphStore;
 use crate::types::graph_store::GraphStore;

@@ -90,17 +90,7 @@ macro_rules! unsigned_graph_id {
 /// External or database identity of a node.
 #[repr(transparent)]
 #[derive(
-    Debug,
-    Default,
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Serialize,
-    Deserialize,
+    Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Serialize, Deserialize,
 )]
 #[serde(transparent)]
 pub struct OriginalNodeId(i64);
@@ -149,7 +139,10 @@ mod tests {
 
     #[test]
     fn mapped_ids_advance_without_primitive_arithmetic() {
-        assert_eq!(MappedNodeId::new(4).checked_add(3), Some(MappedNodeId::new(7)));
+        assert_eq!(
+            MappedNodeId::new(4).checked_add(3),
+            Some(MappedNodeId::new(7))
+        );
         assert_eq!(MappedNodeId::new(u64::MAX).checked_add(1), None);
     }
 }

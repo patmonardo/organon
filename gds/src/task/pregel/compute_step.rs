@@ -7,11 +7,11 @@
 //! Corresponds to Java's ForkJoinComputeStep and TypeScript's ForkJoinComputeStep.
 
 use crate::collections::HugeAtomicBitSet;
-use crate::task::progress::tasks::LeafTask;
 use crate::task::pregel::{
     ComputeContext, InitContext, MessageIterator, Messages, Messenger, NodeValue, Partition,
     PregelRuntimeConfig,
 };
+use crate::task::progress::tasks::LeafTask;
 use crate::types::graph::Graph;
 use std::sync::atomic::AtomicBool;
 use std::sync::Arc;

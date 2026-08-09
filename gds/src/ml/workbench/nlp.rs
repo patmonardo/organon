@@ -9,10 +9,6 @@ use crate::collections::dataset::feature::featstruct::FeatBindings;
 use crate::collections::dataset::feature::featstruct::FeatStruct;
 use crate::collections::dataset::feature::featstruct::FeatValue;
 use crate::collections::HugeIntArray;
-use crate::task::concurrency::Concurrency;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::TaskProgressTracker;
-use crate::task::progress::Tasks;
 use crate::ml::decision_tree::ClassifierImpurityCriterionType;
 use crate::ml::metrics::ModelSpecificMetricsHandler;
 use crate::ml::models::features::DenseFeatures;
@@ -36,6 +32,10 @@ use crate::ml::nlp::sem::evaluate::Model;
 use crate::ml::nlp::sem::evaluate::Valuation;
 use crate::ml::nlp::sem::logic;
 use crate::ml::nlp::sem::skolemize;
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::TaskProgressTracker;
+use crate::task::progress::Tasks;
 use serde::Serialize;
 
 #[derive(Clone, Debug, Serialize)]

@@ -118,7 +118,13 @@ struct L2DoubleArrayAppender {
 }
 
 impl LinkFeatureAppender for L2DoubleArrayAppender {
-    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        link_features: &mut [f64],
+        offset: usize,
+    ) {
         let source_vec = match self.props.double_array_value(u64::from(source)) {
             Ok(vec) => vec,
             Err(_) => {
@@ -157,7 +163,13 @@ struct L2FloatArrayAppender {
 }
 
 impl LinkFeatureAppender for L2FloatArrayAppender {
-    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        link_features: &mut [f64],
+        offset: usize,
+    ) {
         let source_vec = match self.props.float_array_value(u64::from(source)) {
             Ok(vec) => vec,
             Err(_) => {
@@ -195,7 +207,13 @@ struct L2LongArrayAppender {
 }
 
 impl LinkFeatureAppender for L2LongArrayAppender {
-    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        link_features: &mut [f64],
+        offset: usize,
+    ) {
         let source_vec = match self.props.long_array_value(u64::from(source)) {
             Ok(vec) => vec,
             Err(_) => {
@@ -233,7 +251,13 @@ struct L2LongAppender {
 }
 
 impl LinkFeatureAppender for L2LongAppender {
-    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        link_features: &mut [f64],
+        offset: usize,
+    ) {
         let source_val = match self.props.long_value(u64::from(source)) {
             Ok(val) => val as f64,
             Err(_) => 0.0,
@@ -259,7 +283,13 @@ struct L2DoubleAppender {
 }
 
 impl LinkFeatureAppender for L2DoubleAppender {
-    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        link_features: &mut [f64],
+        offset: usize,
+    ) {
         let source_val = match self.props.double_value(u64::from(source)) {
             Ok(val) => val,
             Err(_) => 0.0,

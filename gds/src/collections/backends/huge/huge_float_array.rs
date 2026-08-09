@@ -5,8 +5,8 @@
 
 use crate::collections::cursor::{HugeCursor, HugeCursorSupport, PagedCursor, SinglePageCursor};
 use crate::collections::PageUtil;
-use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::ParallelFloatPageCreator;
+use crate::task::concurrency::Concurrency;
 
 /// Maximum size for single-page arrays
 const MAX_ARRAY_LENGTH: usize = PageUtil::MAX_ARRAY_LENGTH;

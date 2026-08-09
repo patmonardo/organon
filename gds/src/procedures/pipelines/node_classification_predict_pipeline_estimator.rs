@@ -1,6 +1,6 @@
-use crate::task::memory::{MemoryEstimation, MemoryEstimations};
 use crate::ml::models::ClassifierData;
 use crate::ml::node_classification::estimate_predict_memory_with_derived_batch_size;
+use crate::task::memory::{MemoryEstimation, MemoryEstimations};
 
 use super::node_classification_predict_pipeline_constants::MIN_BATCH_SIZE;
 

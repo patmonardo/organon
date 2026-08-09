@@ -1,6 +1,3 @@
-use crate::task::concurrency::Concurrency;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::{ProgressTracker, TaskProgressTracker, Tasks};
 use crate::ml::metrics::ModelSpecificMetricsHandler;
 use crate::ml::models::logistic_regression::{
     LogisticRegressionTrainConfig, LogisticRegressionTrainer,
@@ -11,6 +8,9 @@ use crate::ml::models::random_forest::{
 };
 use crate::ml::models::svm::{SVMClassifierTrainConfig, SVMClassifierTrainer};
 use crate::ml::models::{base::TrainerConfigTrait, ClassifierTrainer, TrainingMethod};
+use crate::task::concurrency::Concurrency;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{ProgressTracker, TaskProgressTracker, Tasks};
 use parking_lot::RwLock;
 use std::sync::Arc;
 

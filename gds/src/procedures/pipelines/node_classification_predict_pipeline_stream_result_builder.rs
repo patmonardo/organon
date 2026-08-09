@@ -4,8 +4,8 @@ use crate::procedures::pipelines::types::NodeClassificationStreamResult;
 use crate::procedures::pipelines::{
     NodeClassificationPipelineResult, NodeClassificationPredictPipelineStreamConfig,
 };
-use crate::types::graph_store::GraphStore;
 use crate::types::graph::MappedNodeId;
+use crate::types::graph_store::GraphStore;
 
 pub struct NodeClassificationPredictPipelineStreamResultBuilder {
     _configuration: NodeClassificationPredictPipelineStreamConfig,

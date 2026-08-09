@@ -75,10 +75,7 @@ impl<'a> NodeRegressionPredictPipelineExecutor<'a> {
             .map(|label| NodeLabel::of(label.as_str()))
             .collect();
 
-        graph
-            .iter_with_labels(&label_set)
-            .map(u64::from)
-            .collect()
+        graph.iter_with_labels(&label_set).map(u64::from).collect()
     }
 }
 

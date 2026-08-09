@@ -6,6 +6,7 @@ use serde_json::{json, Map, Value};
 
 use crate::applications::form::bus_nexus::FormBusNexus;
 use crate::applications::form::bus_nexus::FormBusSubmission;
+use crate::applications::form::runtime::FormTaskJobReceipt;
 use crate::applications::services::applications_dispatch;
 use crate::form::{FormVmOperation, FormVmOperationKind};
 use crate::projection::eval::algorithm::{
@@ -140,6 +141,63 @@ pub(crate) fn apply_execution_plan(
         failed,
         skipped,
     })
+}
+
+pub(crate) fn apply_task_job_receipt(
+    operations: &[FormVmOperation],
+    receipt: &FormTaskJobReceipt,
+) -> ProgramFormApplyPrint {
+    let mut executed = Vec::new();
+    let mut failed = Vec::new();
+    let mut skipped = Vec::new();
+    let receipt_json = serde_json::to_value(receipt).unwrap_or_else(|error| {
+        json!({
+            "jobId": receipt.job_id,
+            "state": receipt.state,
+            "serializationError": error.to_string(),
+        })
+    });
+
+    for operation in operations {
+        match &operation.kind {
+            FormVmOperationKind::InvokeOperator { service, operator }
+                if service == "form.algorithms" =>
+            {
+                let op = normalize_algorithm_op(operator).unwrap_or_else(|| operator.clone());
+                let response = json!({
+                    "ok": receipt.succeeded,
+                    "op": op,
+                    "taskJobReceipt": receipt_json.clone(),
+                });
+                let execution = ProgramFormExecution {
+                    pattern: operator.clone(),
+                    op: op.clone(),
+                    spec_binding: "graph_task_daemon".to_string(),
+                    response: response.clone(),
+                };
+                executed.push(execution);
+                if !receipt.succeeded {
+                    failed.push(ProgramFormFailure {
+                        pattern: operator.clone(),
+                        op,
+                        spec_binding: "graph_task_daemon".to_string(),
+                        response,
+                    });
+                }
+            }
+            FormVmOperationKind::InvokeOperator { operator, .. }
+            | FormVmOperationKind::DeferredCompatibility { pattern: operator } => {
+                skipped.push(operator.clone());
+            }
+            _ => {}
+        }
+    }
+
+    ProgramFormApplyPrint {
+        executed,
+        failed,
+        skipped,
+    }
 }
 
 pub(crate) fn normalize_algorithm_op(pattern: &str) -> Option<String> {

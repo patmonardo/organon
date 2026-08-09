@@ -256,10 +256,8 @@ mod tests {
         let extractor = LinkFeatureExtractor::of(graph.as_ref(), steps);
 
         // Extract for source=0, target=1
-        let features = extractor.extract_features_for_pair(
-            MappedNodeId::new(0),
-            MappedNodeId::new(1),
-        );
+        let features =
+            extractor.extract_features_for_pair(MappedNodeId::new(0), MappedNodeId::new(1));
 
         // Should return array of correct dimension (0 with placeholder)
         assert_eq!(features.len(), extractor.feature_dimension());
@@ -300,9 +298,7 @@ mod tests {
         assert_eq!(extractor.feature_dimension(), 1); // Sum of dimensions
 
         // Extract features for a pair
-        let _features = extractor.extract_features_for_pair(
-            MappedNodeId::new(0),
-            MappedNodeId::new(1),
-        );
+        let _features =
+            extractor.extract_features_for_pair(MappedNodeId::new(0), MappedNodeId::new(1));
     }
 }

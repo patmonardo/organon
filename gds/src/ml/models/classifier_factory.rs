@@ -1,4 +1,3 @@
-use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 use crate::ml::decision_tree::DecisionTreeClassifierTrainer;
 use crate::ml::decision_tree::DecisionTreeTrainerConfig;
 use crate::ml::models::base::TrainerConfigTrait;
@@ -11,6 +10,7 @@ use crate::ml::models::random_forest::RandomForestClassifierTrainerConfig;
 use crate::ml::models::random_forest::{RandomForestClassifier, RandomForestClassifierData};
 use crate::ml::models::svm::{SVMClassifier, SVMClassifierData};
 use crate::ml::models::{Classifier, ClassifierData, TrainingMethod};
+use crate::task::memory::{Estimate, MemoryEstimation, MemoryEstimations, MemoryRange};
 
 /// Factory for creating classifiers from trained model data.
 pub struct ClassifierFactory;

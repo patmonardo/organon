@@ -8,8 +8,8 @@
 
 use crate::algo::pagerank::PageRankVariant;
 use crate::collections::HugeAtomicDoubleArray;
-use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::core::graph_dimensions::GraphDimensions;
+use crate::task::concurrency::{install_with_concurrency, Concurrency};
 use crate::task::memory::{Estimate, MemoryEstimation, MemoryRange, MemoryTree};
 use rayon::prelude::*;
 use std::collections::HashSet;

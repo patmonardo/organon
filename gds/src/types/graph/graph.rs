@@ -73,7 +73,6 @@ pub trait GraphExt: Graph {
         let requested = configure(GraphCharacteristics::builder()).build();
         self.characteristics().intersect(requested)
     }
-
 }
 
 impl<T: Graph + ?Sized> GraphExt for T {}

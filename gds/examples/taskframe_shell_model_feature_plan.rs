@@ -9,7 +9,7 @@ use std::path::PathBuf;
 
 use gds::task::concurrency::Concurrency;
 use gds::task::memory::MemoryRange;
-use gds::task::runtime::{TaskStage, TaskRuntime};
+use gds::task::runtime::{TaskRuntime, TaskStage};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let root = fixture_root();

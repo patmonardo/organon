@@ -1,12 +1,12 @@
 use super::edge_splitter::{
     split_positive_examples_with, BaseEdgeSplitter, EdgeSplitter, RelationshipsBuilderFactory,
 };
-use crate::task::concurrency::virtual_threads::RunWithConcurrency;
-use crate::task::concurrency::Concurrency;
 use crate::core::utils::partition::DegreeFunction;
 use crate::core::utils::partition::PartitionUtils;
 use crate::projection::factory::RelationshipsBuilder;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::virtual_threads::RunWithConcurrency;
+use crate::task::concurrency::Concurrency;
 use crate::types::graph::id_map::IdMap;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;

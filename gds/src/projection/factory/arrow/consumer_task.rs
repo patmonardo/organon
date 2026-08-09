@@ -182,11 +182,7 @@ impl ConsumerEdgeImportTask {
         let default_rel_type = crate::projection::RelationshipType::of("RELATED");
 
         for i in 0..sources.len() {
-            acc.add_edge(
-                sources[i],
-                targets[i],
-                default_rel_type.clone(),
-            );
+            acc.add_edge(sources[i], targets[i], default_rel_type.clone());
         }
 
         // Reset consumer buffer after flush

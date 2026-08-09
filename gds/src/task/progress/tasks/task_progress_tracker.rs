@@ -4,8 +4,8 @@
 //! manages nested tasks, mutates task progress/volume, and emits logs.
 
 use crate::task::concurrency::Concurrency;
-use crate::task::progress::{JobId, TaskRegistry, TaskRegistryFactory};
 use crate::task::memory::MemoryRange;
+use crate::task::progress::{JobId, TaskRegistry, TaskRegistryFactory};
 use std::sync::{Arc, Mutex};
 
 use super::{LogLevel, ProgressTracker, Status, Task, UNKNOWN_VOLUME};

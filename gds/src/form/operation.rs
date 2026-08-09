@@ -13,6 +13,7 @@ pub enum FormVmOperationKind {
     ProjectApplication { application_form: String },
     DetermineGraph { binding: String },
     ConstituteTask { binding: String },
+    ExecuteTask { runtime: String },
     InvokeOperator { service: String, operator: String },
     CollectEvidence { binding: String },
     ReturnForm { binding: String },

@@ -10,9 +10,9 @@
 
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
+use crate::task::memory::MemoryRange;
 use crate::task::progress::tasks::LogLevel;
 use crate::task::progress::ProgressTracker;
-use crate::task::memory::MemoryRange;
 
 pub struct TerminationAwareProgressTracker<'a> {
     inner: &'a mut dyn ProgressTracker,

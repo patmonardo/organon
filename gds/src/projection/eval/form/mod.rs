@@ -26,7 +26,10 @@ mod tests {
         ApplicationForm, Context, FormShape, Morph, ProgramSpec, PureFormOp, PureFormVmPhase,
         Shape, Specification,
     };
+    use crate::types::catalog::GraphCatalog;
     use crate::types::catalog::InMemoryGraphCatalog;
+    use crate::types::graph_store::DefaultGraphStore;
+    use crate::types::random::RandomGraphConfig;
 
     fn sample_program() -> ProgramSpec {
         ProgramSpec {
@@ -162,6 +165,12 @@ mod tests {
         assert_eq!(print.organic_unity.status, OrganicUnityStatus::Coherent);
         assert!(print.organic_unity.reasons.is_empty());
         assert!(!print.ok);
+        assert!(print.run_report.summary.starts_with("Form run form-vm-"));
+        let managed = api
+            .inspect_run(&print.run_report.run_id)
+            .expect("completed Form run should be registered");
+        assert_eq!(managed.linked_form_id, print.linked_form.form_id);
+        assert_eq!(managed.outcome, print.vm_lifecycle.outcome);
     }
 
     #[test]
@@ -181,6 +190,53 @@ mod tests {
         assert_eq!(print.apply.executed.len(), 1);
         assert_eq!(print.apply.executed[0].spec_binding, "direct_compute");
         assert_eq!(print.organic_unity.status, OrganicUnityStatus::Coherent);
+    }
+
+    #[test]
+    fn organon_form_executes_once_through_task_daemon_and_returns_receipt() {
+        let program = ProgramSpec::new(
+            FormShape::new(
+                Shape::default(),
+                Context::default(),
+                Morph::new(vec!["algo.pagerank".to_string()]),
+            ),
+            Specification::new("form.organon".to_string(), None, HashMap::new()),
+            vec![],
+            vec![ApplicationForm::organon()],
+            vec!["organon".to_string()],
+        );
+        let mut request = ProgramFormRequest::new(program);
+        request.default_input = json!({"graphName": "organon-runtime"});
+        request.fail_fast = false;
+
+        let catalog = Arc::new(InMemoryGraphCatalog::new());
+        catalog.set(
+            "organon-runtime",
+            Arc::new(
+                DefaultGraphStore::random(&RandomGraphConfig::seeded(84))
+                    .expect("random graph should build"),
+            ),
+        );
+
+        let print = ProgramFormApi::new()
+            .evaluate_apply_print(request, catalog)
+            .expect("Organon Form should execute through task daemon");
+
+        let receipt = print
+            .task_job_receipt
+            .as_ref()
+            .expect("TaskJob receipt should be returned");
+        assert!(receipt.succeeded, "task failed: {:?}", receipt.error);
+        assert_eq!(receipt.invocation_count, 1);
+        assert_eq!(print.apply.executed.len(), 1);
+        assert_eq!(print.apply.executed[0].spec_binding, "graph_task_daemon");
+        assert_eq!(print.run_report.task_jobs, vec![receipt.job_id.clone()]);
+        assert!(print
+            .operation_receipts
+            .iter()
+            .any(|operation| operation.operation == "execute_task"
+                && operation.status
+                    == crate::applications::form::runtime::FormVmOperationStatus::Executed));
     }
 
     #[test]

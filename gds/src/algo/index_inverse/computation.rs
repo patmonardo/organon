@@ -30,7 +30,8 @@ impl IndexInverseComputationRuntime {
             for cursor in graph.stream_relationships(source, fallback) {
                 let tgt = cursor.target_id();
                 outgoing[src].push(tgt);
-                if let Some(incoming_row) = tgt.to_usize().and_then(|index| incoming.get_mut(index)) {
+                if let Some(incoming_row) = tgt.to_usize().and_then(|index| incoming.get_mut(index))
+                {
                     incoming_row.push(source);
                 }
             }

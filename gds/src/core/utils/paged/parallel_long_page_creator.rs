@@ -21,8 +21,8 @@
 //! - Bulk initialization of sparse data structures
 //! - Fast setup of lookup tables and mappings
 
-use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::{PageAllocator, PageAllocatorFactory};
+use crate::task::concurrency::Concurrency;
 use std::sync::Arc;
 
 /// Parallel page creator for i64 arrays.

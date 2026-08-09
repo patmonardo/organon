@@ -1,12 +1,10 @@
 use crate::algo::prize_collecting_steiner_tree::spec::{
     PCSTreeConfig, PCSTreeResult, PRUNED, ROOT_NODE,
 };
-use crate::algo::prize_collecting_steiner_tree::{
-    PCSTreeComputationRuntime, PCSTreeParent,
-};
+use crate::algo::prize_collecting_steiner_tree::{PCSTreeComputationRuntime, PCSTreeParent};
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::TerminationFlag;
 use crate::task::progress::{ProgressTracker, UNKNOWN_VOLUME};
-use crate::projection::eval::algorithm::AlgorithmError;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use std::cmp::Ordering;
@@ -95,8 +93,9 @@ impl PCSTreeStorageRuntime {
 
         let start = Instant::now();
         let node_count = graph.map(|g| g.node_count()).unwrap_or(0);
-        let neighbor_fn =
-            |node: MappedNodeId| -> Vec<(MappedNodeId, f64)> { self.get_neighbors_with_weights(graph, node) };
+        let neighbor_fn = |node: MappedNodeId| -> Vec<(MappedNodeId, f64)> {
+            self.get_neighbors_with_weights(graph, node)
+        };
 
         let result = self.compute_core(
             computation,

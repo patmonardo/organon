@@ -3,9 +3,9 @@
 //! Bridges are defined on undirected graphs; this storage layer always builds an undirected
 //! graph view from the GraphStore and exposes a neighbor callback.
 
-use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
+use crate::task::concurrency::{TerminatedException, TerminationFlag};
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;

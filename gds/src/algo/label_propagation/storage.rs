@@ -4,11 +4,11 @@ use super::computation::{
     LabelPropComputationRuntime, LabelPropResult as LabelPropComputationResult,
 };
 use super::spec::LabelPropConfig;
-use crate::task::concurrency::TerminationFlag;
-use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::Orientation;
 use crate::projection::RelationshipType;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::ProgressTracker;
 use crate::types::default_value::LONG_DEFAULT_FALLBACK;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;
@@ -126,9 +126,7 @@ impl LabelPropStorageRuntime {
             termination_flag.assert_running();
 
             let node_id = MappedNodeId::try_from(i).map_err(|_| {
-                AlgorithmError::Execution(format!(
-                    "node index {i} exceeds the mapped ID domain"
-                ))
+                AlgorithmError::Execution(format!("node index {i} exceeds the mapped ID domain"))
             })?;
             let original = self
                 .graph

@@ -2,16 +2,16 @@
 
 use super::ApproxMaxKCutComputationRuntime;
 use super::ApproxMaxKCutStorageRuntime;
+use crate::config::validation::ConfigError;
+use crate::define_algorithm_spec;
+use crate::projection::eval::algorithm::AlgorithmError;
 use crate::task::concurrency::Concurrency;
 use crate::task::concurrency::TerminationFlag;
-use crate::config::validation::ConfigError;
 use crate::task::progress::EmptyTaskRegistryFactory;
 use crate::task::progress::JobId;
 use crate::task::progress::Task;
 use crate::task::progress::TaskProgressTracker;
 use crate::task::progress::Tasks;
-use crate::define_algorithm_spec;
-use crate::projection::eval::algorithm::AlgorithmError;
 use std::sync::Arc;
 use std::time::Duration;
 

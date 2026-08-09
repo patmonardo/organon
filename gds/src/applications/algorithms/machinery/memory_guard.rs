@@ -16,9 +16,9 @@ use std::sync::Arc;
 
 use crate::applications::services::logging::Log;
 use crate::core::loading::GraphResources;
-use crate::task::progress::JobId;
 use crate::errors::MemoryEstimationError;
 use crate::task::memory::{MemoryRange, MemoryTracker, MemoryTreeWithDimensions};
+use crate::task::progress::JobId;
 
 use super::Label;
 

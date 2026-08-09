@@ -8,11 +8,11 @@ use crate::applications::algorithms::machinery::{
 use crate::applications::algorithms::similarity::{
     err, get_array, get_f64, get_str, get_u64, timings_json, CommonRequest, Mode,
 };
-use crate::task::concurrency::TerminationFlag;
 use crate::core::loading::{CatalogLoader, GraphResources};
-use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::procedures::similarity::filtered_knn::FilteredKnnFacade;
 use crate::projection::NodeLabel;
+use crate::task::concurrency::TerminationFlag;
+use crate::task::progress::{JobId, ProgressTracker, TaskRegistryFactories, Tasks};
 use crate::types::catalog::GraphCatalog;
 use serde_json::{json, Value};
 use std::sync::Arc;

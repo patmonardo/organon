@@ -271,7 +271,6 @@ impl BufferedEdgeConsumer {
     pub fn targets(&self) -> &[OriginalNodeId] {
         &self.buffer.targets
     }
-
 }
 
 impl RecordConsumer<RelationshipRecord> for BufferedEdgeConsumer {
@@ -289,10 +288,10 @@ impl RecordConsumer<RelationshipRecord> for BufferedEdgeConsumer {
         }
 
         // Check for dangling relationships
-        let source_valid = u64::try_from(record.source_node_id.get())
-            .is_ok_and(|source| source < self.node_count);
-        let target_valid = u64::try_from(record.target_node_id.get())
-            .is_ok_and(|target| target < self.node_count);
+        let source_valid =
+            u64::try_from(record.source_node_id.get()).is_ok_and(|source| source < self.node_count);
+        let target_valid =
+            u64::try_from(record.target_node_id.get()).is_ok_and(|target| target < self.node_count);
 
         if !source_valid || !target_valid {
             if self.skip_dangling {

@@ -6,9 +6,9 @@
 use crate::algo::articulation_points::{
     ArticulationPointsComputationResult, ArticulationPointsComputationRuntime, StackEvent,
 };
-use crate::task::progress::ProgressTracker;
 use crate::projection::eval::algorithm::AlgorithmError;
 use crate::projection::{Orientation, RelationshipType};
+use crate::task::progress::ProgressTracker;
 use crate::types::graph::Graph;
 use crate::types::graph::MappedNodeId;
 use crate::types::prelude::GraphStore;

@@ -69,7 +69,12 @@ struct CosineComputationResult {
 }
 
 trait PartialL2WithNormsComputer: Send + Sync {
-    fn compute(&self, source: MappedNodeId, target: MappedNodeId, result: &mut CosineComputationResult);
+    fn compute(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        result: &mut CosineComputationResult,
+    );
 }
 
 struct CosineAppender {
@@ -83,7 +88,13 @@ impl CosineAppender {
 }
 
 impl LinkFeatureAppender for CosineAppender {
-    fn append_features(&self, source: MappedNodeId, target: MappedNodeId, link_features: &mut [f64], offset: usize) {
+    fn append_features(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        link_features: &mut [f64],
+        offset: usize,
+    ) {
         let mut result = CosineComputationResult::default();
 
         for computer in &self.computers {
@@ -139,7 +150,12 @@ struct DoubleArrayComputer {
 }
 
 impl PartialL2WithNormsComputer for DoubleArrayComputer {
-    fn compute(&self, source: MappedNodeId, target: MappedNodeId, result: &mut CosineComputationResult) {
+    fn compute(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        result: &mut CosineComputationResult,
+    ) {
         let source_vec = match self.props.double_array_value(u64::from(source)) {
             Ok(vec) => vec,
             Err(_) => return,
@@ -165,7 +181,12 @@ struct FloatArrayComputer {
 }
 
 impl PartialL2WithNormsComputer for FloatArrayComputer {
-    fn compute(&self, source: MappedNodeId, target: MappedNodeId, result: &mut CosineComputationResult) {
+    fn compute(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        result: &mut CosineComputationResult,
+    ) {
         let source_vec = match self.props.float_array_value(u64::from(source)) {
             Ok(vec) => vec,
             Err(_) => return,
@@ -191,7 +212,12 @@ struct LongArrayComputer {
 }
 
 impl PartialL2WithNormsComputer for LongArrayComputer {
-    fn compute(&self, source: MappedNodeId, target: MappedNodeId, result: &mut CosineComputationResult) {
+    fn compute(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        result: &mut CosineComputationResult,
+    ) {
         let source_vec = match self.props.long_array_value(u64::from(source)) {
             Ok(vec) => vec,
             Err(_) => return,
@@ -216,7 +242,12 @@ struct DoubleComputer {
 }
 
 impl PartialL2WithNormsComputer for DoubleComputer {
-    fn compute(&self, source: MappedNodeId, target: MappedNodeId, result: &mut CosineComputationResult) {
+    fn compute(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        result: &mut CosineComputationResult,
+    ) {
         let source_val = match self.props.double_value(u64::from(source)) {
             Ok(val) => val,
             Err(_) => return,
@@ -237,7 +268,12 @@ struct LongComputer {
 }
 
 impl PartialL2WithNormsComputer for LongComputer {
-    fn compute(&self, source: MappedNodeId, target: MappedNodeId, result: &mut CosineComputationResult) {
+    fn compute(
+        &self,
+        source: MappedNodeId,
+        target: MappedNodeId,
+        result: &mut CosineComputationResult,
+    ) {
         let source_val = match self.props.long_value(u64::from(source)) {
             Ok(val) => val as f64,
             Err(_) => return,

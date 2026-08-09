@@ -21,8 +21,8 @@
 //! - Property values for graph analytics
 //! - Fast setup of floating-point lookup tables
 
-use crate::task::concurrency::Concurrency;
 use crate::core::utils::paged::{PageAllocator, PageAllocatorFactory};
+use crate::task::concurrency::Concurrency;
 use std::sync::Arc;
 
 /// Parallel page creator for f64 arrays.
