@@ -4,5 +4,7 @@
 //! into the Form evaluator (`projection/eval/form`).
 
 pub mod program;
+pub mod vm;
 
 pub use program::*;
+pub use vm::*;

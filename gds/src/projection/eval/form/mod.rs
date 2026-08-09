@@ -23,7 +23,8 @@ mod tests {
     use serde_json::json;
 
     use crate::form::{
-        ApplicationForm, Context, FormShape, Morph, ProgramSpec, Shape, Specification,
+        ApplicationForm, Context, FormShape, Morph, ProgramSpec, PureFormOp, PureFormVmPhase,
+        Shape, Specification,
     };
     use crate::types::catalog::InMemoryGraphCatalog;
 
@@ -49,6 +50,55 @@ mod tests {
             }],
             selected_forms: vec!["centrality".to_string()],
         }
+    }
+
+    #[test]
+    fn evaluator_preserves_organon_application_form_identity() {
+        let program = ProgramSpec {
+            form: FormShape::new(
+                Shape::default(),
+                Context::new(vec![], vec![], "kernel".to_string(), vec![]),
+                Morph::new(vec!["base.normalize".to_string()]),
+            ),
+            gdsl: Specification::new("form.organon".to_string(), None, HashMap::new()),
+            sdsl: vec![],
+            application_forms: vec![ApplicationForm::organon()],
+            selected_forms: vec!["organon".to_string()],
+        };
+
+        let result = FormEvaluator::new()
+            .evaluate(FormEvalRequest::new(program))
+            .expect("Organon Form evaluation should succeed");
+
+        assert_eq!(result.plan.selected_forms, vec!["organon"]);
+        assert_eq!(result.contract.selected_forms, vec!["organon"]);
+        assert_eq!(
+            result.plan.patterns,
+            vec![
+                "base.normalize",
+                "graphframe.determine",
+                "taskframe.constitute",
+                "dataset.evidence",
+                "form.return",
+            ]
+        );
+        assert_eq!(result.pre_eval.given_forms.len(), 1);
+        assert_eq!(result.pre_eval.given_forms[0].application_form, "organon");
+        assert_eq!(
+            result.pre_eval.given_forms[0].monadic_evaluation,
+            MonadicEvaluationState::Pending
+        );
+        assert_eq!(
+            result.vm_trace.entries.first().map(|entry| entry.phase),
+            Some(PureFormVmPhase::Loaded)
+        );
+        assert!(result.vm_trace.entries.iter().any(|entry| {
+            entry.operation == PureFormOp::ProjectApplicationForm("organon".to_string())
+        }));
+        assert_eq!(
+            result.vm_trace.entries.last().map(|entry| entry.phase),
+            Some(PureFormVmPhase::ReturnedToEval)
+        );
     }
 
     #[test]

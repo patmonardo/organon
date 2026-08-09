@@ -466,6 +466,37 @@ impl PerfectedGivenForm {
 }
 
 impl ApplicationForm {
+    /// Canonical applied Form for Organon platform mediation.
+    ///
+    /// The descriptor names capability lanes only. Their concrete GraphFrame,
+    /// TaskFrame, Dataset, and return bindings remain owned by downstream
+    /// execution frames rather than Form core.
+    pub fn organon() -> Self {
+        Self::new(
+            "organon".to_string(),
+            "organon-platform".to_string(),
+            vec!["program".to_string()],
+            vec![
+                "graphframe.determine".to_string(),
+                "taskframe.constitute".to_string(),
+                "dataset.evidence".to_string(),
+                "form.return".to_string(),
+            ],
+            HashMap::from([
+                (
+                    "graphframe".to_string(),
+                    "graphframe.execution-intent".to_string(),
+                ),
+                (
+                    "taskframe".to_string(),
+                    "taskframe.workflow-constitution".to_string(),
+                ),
+                ("dataset".to_string(), "dataset.evidence-return".to_string()),
+                ("return".to_string(), "eval-form.organic-unity".to_string()),
+            ]),
+        )
+    }
+
     pub fn new(
         name: String,
         domain: String,
@@ -1351,6 +1382,89 @@ mod tests {
             vec![pattern.to_string()],
             HashMap::new(),
         )
+    }
+
+    #[test]
+    fn organon_application_form_preserves_pureform_reciprocity() {
+        let application_form = ApplicationForm::organon();
+        assert_eq!(application_form.name, "organon");
+        assert_eq!(application_form.domain, "organon-platform");
+        assert_eq!(application_form.features, vec!["program"]);
+        assert_eq!(
+            application_form.patterns,
+            vec![
+                "graphframe.determine",
+                "taskframe.constitute",
+                "dataset.evidence",
+                "form.return",
+            ]
+        );
+        assert_eq!(
+            application_form
+                .specifications
+                .get("graphframe")
+                .map(String::as_str),
+            Some("graphframe.execution-intent")
+        );
+        assert_eq!(
+            application_form
+                .specifications
+                .get("taskframe")
+                .map(String::as_str),
+            Some("taskframe.workflow-constitution")
+        );
+        assert_eq!(
+            application_form
+                .specifications
+                .get("dataset")
+                .map(String::as_str),
+            Some("dataset.evidence-return")
+        );
+        assert_eq!(
+            application_form
+                .specifications
+                .get("return")
+                .map(String::as_str),
+            Some("eval-form.organic-unity")
+        );
+
+        let form = sample_shape();
+        let principle = form.as_principle();
+        let program = ProgramSpec::new(
+            form,
+            Specification::new("form.organon".to_string(), None, HashMap::new()),
+            vec![],
+            vec![application_form],
+            vec!["organon".to_string()],
+        );
+
+        let plan = program
+            .compile_execution_plan()
+            .expect("Organon application plan should compile");
+        assert_eq!(plan.selected_forms, vec!["organon"]);
+        assert_eq!(
+            plan.patterns,
+            vec![
+                "base.normalize",
+                "graphframe.determine",
+                "taskframe.constitute",
+                "dataset.evidence",
+                "form.return",
+            ]
+        );
+
+        let envelope = program
+            .given_forms(Some("graph://organon".to_string()))
+            .expect("Organon GivenForm should compile")
+            .into_iter()
+            .next()
+            .expect("Organon GivenForm should exist");
+        assert_eq!(envelope.principle, principle);
+        assert_eq!(envelope.principled_effect.application_form.name, "organon");
+        assert_eq!(
+            envelope.principled_effect.appearance.as_deref(),
+            Some("graph://organon")
+        );
     }
 
     #[test]

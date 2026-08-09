@@ -5,7 +5,8 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 
 use crate::form::{
-    ApplicationForm, FormShape, ProgramExecutionPlan, ProgramSpec, ProgramSpecError, Specification,
+    ApplicationForm, FormShape, ProgramExecutionPlan, ProgramSpec, ProgramSpecError, PureFormVm,
+    PureFormVmTrace, Specification,
 };
 
 /// Concept layer: compile and contract a Program Form into canonical meaning.
@@ -28,17 +29,16 @@ impl FormEvaluator {
         appearance: Option<String>,
     ) -> Result<FormEvalResult, FormEvalError> {
         let program = request.program;
-        let plan = program
-            .compile_execution_plan()
+        let vm_output = PureFormVm::new()
+            .run(&program, appearance)
             .map_err(FormEvalError::Program)?;
-        let given_forms = program
-            .given_forms(appearance)
-            .map_err(FormEvalError::Program)?;
+        let pre_eval = FormPreEvalTrace::from_given_forms(vm_output.given_forms);
 
         Ok(FormEvalResult {
-            plan,
+            plan: vm_output.plan,
             contract: FormContract::from_program_spec(&program),
-            pre_eval: FormPreEvalTrace::from_given_forms(given_forms),
+            pre_eval,
+            vm_trace: vm_output.trace,
         })
     }
 }
@@ -61,6 +61,7 @@ pub struct FormEvalResult {
     pub plan: ProgramExecutionPlan,
     pub contract: FormContract,
     pub pre_eval: FormPreEvalTrace,
+    pub vm_trace: PureFormVmTrace,
 }
 
 pub(crate) fn appearance_from_input(default_input: &serde_json::Value) -> Option<String> {
