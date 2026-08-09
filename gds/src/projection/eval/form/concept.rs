@@ -5,8 +5,9 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 
 use crate::form::{
-    ApplicationForm, FormShape, ProgramExecutionPlan, ProgramSpec, ProgramSpecError, PureFormVm,
-    PureFormVmTrace, Specification,
+    ApplicationForm, FormLinkReport, FormShape, FormVm, FormVmLifecycle, FormVmOperation,
+    LinkedExecutableForm, ProgramExecutionPlan, ProgramSpec, ProgramSpecError, PureFormVmTrace,
+    Specification,
 };
 
 /// Concept layer: compile and contract a Program Form into canonical meaning.
@@ -29,16 +30,24 @@ impl FormEvaluator {
         appearance: Option<String>,
     ) -> Result<FormEvalResult, FormEvalError> {
         let program = request.program;
-        let vm_output = PureFormVm::new()
+        let vm_output = FormVm::new()
             .run(&program, appearance)
             .map_err(FormEvalError::Program)?;
         let pre_eval = FormPreEvalTrace::from_given_forms(vm_output.given_forms);
+        let linked_form_id = vm_output.executable.form_id.clone();
+        let vm_operations = vm_output.executable.operations.clone();
+        let link_report = vm_output.executable.link_report.clone();
 
         Ok(FormEvalResult {
             plan: vm_output.plan,
             contract: FormContract::from_program_spec(&program),
             pre_eval,
             vm_trace: vm_output.trace,
+            vm_lifecycle: vm_output.lifecycle,
+            linked_form_id,
+            vm_operations,
+            link_report,
+            executable: vm_output.executable,
         })
     }
 }
@@ -62,6 +71,11 @@ pub struct FormEvalResult {
     pub contract: FormContract,
     pub pre_eval: FormPreEvalTrace,
     pub vm_trace: PureFormVmTrace,
+    pub vm_lifecycle: FormVmLifecycle,
+    pub linked_form_id: String,
+    pub vm_operations: Vec<FormVmOperation>,
+    pub link_report: FormLinkReport,
+    pub executable: LinkedExecutableForm,
 }
 
 pub(crate) fn appearance_from_input(default_input: &serde_json::Value) -> Option<String> {
@@ -311,12 +325,14 @@ impl From<ApplicationFormContract> for ApplicationForm {
 #[derive(Debug)]
 pub enum FormEvalError {
     Program(ProgramSpecError),
+    Lifecycle(crate::form::FormVmLifecycleError),
 }
 
 impl fmt::Display for FormEvalError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Program(error) => write!(f, "form evaluation failed: {error}"),
+            Self::Lifecycle(error) => write!(f, "form lifecycle failed: {error}"),
         }
     }
 }
@@ -325,6 +341,7 @@ impl Error for FormEvalError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
             Self::Program(error) => Some(error),
+            Self::Lifecycle(error) => Some(error),
         }
     }
 }

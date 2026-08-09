@@ -7,6 +7,7 @@ use serde_json::{json, Map, Value};
 use crate::applications::form::bus_nexus::FormBusNexus;
 use crate::applications::form::bus_nexus::FormBusSubmission;
 use crate::applications::services::applications_dispatch;
+use crate::form::{FormVmOperation, FormVmOperationKind};
 use crate::projection::eval::algorithm::{
     AlgorithmError, AlgorithmSpec, ComputationResult, ConfigError, ConsumerError, ExecutionContext,
     ExecutionMode, ProcedureExecutor,
@@ -54,7 +55,7 @@ pub struct ProgramFormFailure {
 }
 
 pub(crate) fn apply_execution_plan(
-    patterns: &[String],
+    operations: &[FormVmOperation],
     default_input: &Value,
     op_inputs: &HashMap<String, Value>,
     username: &str,
@@ -67,7 +68,20 @@ pub(crate) fn apply_execution_plan(
     let mut failed = Vec::new();
     let mut skipped = Vec::new();
 
-    for pattern in patterns {
+    for operation in operations {
+        let pattern = match &operation.kind {
+            FormVmOperationKind::InvokeOperator { service, operator }
+                if service == "form.algorithms" =>
+            {
+                operator
+            }
+            FormVmOperationKind::InvokeOperator { operator, .. }
+            | FormVmOperationKind::DeferredCompatibility { pattern: operator } => {
+                skipped.push(operator.clone());
+                continue;
+            }
+            _ => continue,
+        };
         let Some(op) = normalize_algorithm_op(pattern) else {
             skipped.push(pattern.clone());
             continue;

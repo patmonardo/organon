@@ -6,6 +6,9 @@ use std::sync::Arc;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
+use crate::applications::form::runtime::prepare_linked_form;
+use crate::applications::form::runtime::FormVmOperationReceipt;
+use crate::form::FormVmEvidenceRef;
 use crate::form::ProgramSpec;
 use crate::projection::eval::algorithm::ExecutionMode;
 use crate::types::catalog::GraphCatalog;
@@ -58,8 +61,36 @@ impl ProgramFormApi {
             .evaluate_with_appearance(FormEvalRequest::new(program), appearance)
             .map_err(FormProgramError::Evaluate)?;
 
+        let mut vm_lifecycle = eval.vm_lifecycle;
+        let linked_form = LinkedFormPrint {
+            form_id: eval.linked_form_id,
+            operations: eval.vm_operations,
+            link_report: eval.link_report,
+        };
+        vm_lifecycle
+            .begin_evaluation()
+            .map_err(|error| FormProgramError::Evaluate(FormEvalError::Lifecycle(error)))?;
+
+        let runtime_preparation = prepare_linked_form(
+            &eval.executable,
+            &default_input,
+            &op_inputs,
+            execution_mode,
+            catalog.clone(),
+        )
+        .map_err(FormProgramError::Runtime)?;
+        for receipt in &runtime_preparation.receipts {
+            vm_lifecycle.record_operation_mediation(
+                receipt.operation_sequence,
+                FormVmEvidenceRef::new(
+                    receipt.evidence_kind.clone(),
+                    receipt.evidence_reference.clone(),
+                ),
+            );
+        }
+
         let apply = apply_execution_plan(
-            &eval.plan.patterns,
+            &eval.executable.operations,
             &default_input,
             &op_inputs,
             &username,
@@ -74,6 +105,16 @@ impl ProgramFormApi {
         } else {
             MonadicEvaluationState::Failed
         };
+
+        vm_lifecycle
+            .complete_evaluation(
+                apply.failed.is_empty(),
+                [
+                    FormVmEvidenceRef::new("executed_operations", apply.executed.len().to_string()),
+                    FormVmEvidenceRef::new("failed_operations", apply.failed.len().to_string()),
+                ],
+            )
+            .map_err(|error| FormProgramError::Evaluate(FormEvalError::Lifecycle(error)))?;
 
         let mut pre_eval = eval.pre_eval;
         pre_eval.set_monadic_state(monadic_state.clone());
@@ -106,6 +147,9 @@ impl ProgramFormApi {
                 state: monadic_state,
             },
             organic_unity,
+            vm_lifecycle,
+            linked_form,
+            operation_receipts: runtime_preparation.receipts,
         })
     }
 
@@ -286,6 +330,17 @@ pub struct ProgramFormPrint {
     pub pre_eval: FormPreEvalTrace,
     pub evaluation_slot: MonadicEvaluationSlot,
     pub organic_unity: OrganicUnityReport,
+    pub vm_lifecycle: crate::form::FormVmLifecycle,
+    pub linked_form: LinkedFormPrint,
+    pub operation_receipts: Vec<FormVmOperationReceipt>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LinkedFormPrint {
+    pub form_id: String,
+    pub operations: Vec<crate::form::FormVmOperation>,
+    pub link_report: crate::form::FormLinkReport,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -413,6 +468,7 @@ pub enum FormProgramError {
     Evaluate(FormEvalError),
     InvalidInputShape(String),
     Apply(ProgramFormFailure),
+    Runtime(String),
 }
 
 impl fmt::Display for FormProgramError {
@@ -427,6 +483,7 @@ impl fmt::Display for FormProgramError {
                 "program form apply stage failed for pattern '{}' (op='{}')",
                 failure.pattern, failure.op
             ),
+            Self::Runtime(message) => write!(f, "FormVM runtime preparation failed: {message}"),
         }
     }
 }
@@ -435,7 +492,7 @@ impl Error for FormProgramError {
     fn source(&self) -> Option<&(dyn Error + 'static)> {
         match self {
             Self::Evaluate(error) => Some(error),
-            Self::InvalidInputShape(_) | Self::Apply(_) => None,
+            Self::InvalidInputShape(_) | Self::Apply(_) | Self::Runtime(_) => None,
         }
     }
 }
