@@ -6,14 +6,19 @@ use std::sync::Arc;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 
+use crate::applications::form::evidence::{
+    DeferredFormEvidenceProvider, FormEvidenceCollectionRequest, FormEvidenceProvider,
+};
 use crate::applications::form::runtime::prepare_linked_form;
+use crate::applications::form::runtime::FormRuntimeEvidenceExpectation;
 use crate::applications::form::runtime::FormTaskJobReceipt;
 use crate::applications::form::runtime::FormVmOperationReceipt;
 use crate::form::FormVmEvidenceRef;
 use crate::form::ProgramSpec;
 use crate::form::{
-    FormControlCommand, FormControlReceipt, FormRunId, FormRunRegistry, FormRunRegistryError,
-    FormRunReport, InMemoryFormRunRegistry, ManagedFormRun,
+    FormControlCommand, FormControlReceipt, FormEvidenceContract, FormReturnContract, FormRunId,
+    FormRunRegistry, FormRunRegistryError, FormRunReport, FormTerminalDisposition, FormVmOperation,
+    FormVmOperationKind, InMemoryFormRunRegistry, ManagedFormRun,
 };
 use crate::projection::eval::algorithm::ExecutionMode;
 use crate::task::concurrency::TerminationFlag;
@@ -32,6 +37,7 @@ use super::mediation::{
 pub struct ProgramFormApi {
     evaluator: FormEvaluator,
     run_registry: Arc<dyn FormRunRegistry>,
+    evidence_provider: Arc<dyn FormEvidenceProvider>,
 }
 
 impl ProgramFormApi {
@@ -39,6 +45,7 @@ impl ProgramFormApi {
         Self {
             evaluator: FormEvaluator::new(),
             run_registry: Arc::new(InMemoryFormRunRegistry::new()),
+            evidence_provider: Arc::new(DeferredFormEvidenceProvider),
         }
     }
 
@@ -46,11 +53,21 @@ impl ProgramFormApi {
         Self {
             evaluator: FormEvaluator::new(),
             run_registry,
+            evidence_provider: Arc::new(DeferredFormEvidenceProvider),
         }
+    }
+
+    pub fn with_evidence_provider(mut self, provider: Arc<dyn FormEvidenceProvider>) -> Self {
+        self.evidence_provider = provider;
+        self
     }
 
     pub fn inspect_run(&self, run_id: &FormRunId) -> Option<ManagedFormRun> {
         self.run_registry.get(run_id)
+    }
+
+    pub fn inspect_run_report(&self, run_id: &FormRunId) -> Option<FormRunReport> {
+        self.run_registry.get(run_id).map(|run| run.report())
     }
 
     /// Applies an operational control command to a managed Form run.
@@ -150,7 +167,13 @@ impl ProgramFormApi {
             );
         }
         if let Some(receipt) = &task_job_receipt {
-            vm_lifecycle.add_evidence(FormVmEvidenceRef::new("task_job", receipt.job_id.clone()));
+            vm_lifecycle
+                .record_task_observation(
+                    receipt.job_id.clone(),
+                    receipt.state.clone(),
+                    receipt.invocation_count,
+                )
+                .map_err(|error| FormProgramError::Evaluate(FormEvalError::Lifecycle(error)))?;
         }
 
         let apply = match &task_job_receipt {
@@ -167,29 +190,67 @@ impl ProgramFormApi {
             )?,
         };
 
-        let monadic_state = if apply.failed.is_empty() {
-            MonadicEvaluationState::Succeeded
-        } else {
-            MonadicEvaluationState::Failed
-        };
-
         let completion_evidence = [
             FormVmEvidenceRef::new("executed_operations", apply.executed.len().to_string()),
             FormVmEvidenceRef::new("failed_operations", apply.failed.len().to_string()),
         ];
-        if task_job_receipt
-            .as_ref()
-            .is_some_and(|receipt| receipt.state == "canceled")
-        {
-            for evidence in completion_evidence {
+        for evidence in &completion_evidence {
+            vm_lifecycle.add_evidence(evidence.clone());
+        }
+        let return_contract = form_return_contract(
+            &eval.executable.operations,
+            task_managed,
+            runtime_preparation.evidence_expectation(),
+        );
+        if let Some(contract) = &return_contract {
+            let collected = self
+                .evidence_provider
+                .collect(&FormEvidenceCollectionRequest {
+                    run_id: FormRunId::new(vm_lifecycle.run_id.clone()),
+                    linked_form_id: linked_form.form_id.clone(),
+                    binding: contract.evidence.binding.clone(),
+                    task_job_id: task_job_receipt
+                        .as_ref()
+                        .map(|receipt| receipt.job_id.clone()),
+                })
+                .map_err(|error| {
+                    FormProgramError::Runtime(format!(
+                        "evidence provider failed to collect Form references: {error}"
+                    ))
+                })?;
+            for evidence in collected {
                 vm_lifecycle.add_evidence(evidence);
             }
+        }
+        let return_judgment = return_contract
+            .as_ref()
+            .map(|contract| contract.judge(apply.failed.is_empty(), &vm_lifecycle.evidence));
+        let canceled = task_job_receipt
+            .as_ref()
+            .is_some_and(|receipt| receipt.state == "canceled");
+        let return_satisfied = return_judgment
+            .as_ref()
+            .is_none_or(|judgment| judgment.satisfied);
+        let terminal_succeeded = !canceled && apply.failed.is_empty() && return_satisfied;
+        let terminal_disposition = FormTerminalDisposition::determine(
+            canceled,
+            task_job_receipt.as_ref().map(|receipt| receipt.succeeded),
+            apply.failed.is_empty(),
+            return_satisfied,
+            vm_lifecycle.fault.is_some(),
+        );
+        let monadic_state = if terminal_succeeded {
+            MonadicEvaluationState::Succeeded
+        } else {
+            MonadicEvaluationState::Failed
+        };
+        if canceled {
             vm_lifecycle
                 .cancel()
                 .map_err(|error| FormProgramError::Evaluate(FormEvalError::Lifecycle(error)))?;
         } else {
             vm_lifecycle
-                .complete_evaluation(apply.failed.is_empty(), completion_evidence)
+                .complete_evaluation(terminal_succeeded, std::iter::empty())
                 .map_err(|error| FormProgramError::Evaluate(FormEvalError::Lifecycle(error)))?;
         }
 
@@ -207,7 +268,7 @@ impl ProgramFormApi {
             &MonadicEvaluationSlot {
                 state: monadic_state.clone(),
             },
-            apply.failed.is_empty(),
+            terminal_succeeded,
         );
 
         let graph_contracts = runtime_preparation
@@ -239,6 +300,9 @@ impl ProgramFormApi {
             task_frames,
             task_submissions,
             task_jobs,
+            return_contract,
+            return_judgment,
+            terminal_disposition,
         );
         let run_report = managed_run.report();
         if task_managed {
@@ -254,7 +318,7 @@ impl ProgramFormApi {
         }
 
         Ok(ProgramFormPrint {
-            ok: apply.failed.is_empty(),
+            ok: terminal_succeeded,
             backend: apply_backend,
             eval: ProgramFormEvalPrint {
                 selected_forms: eval.plan.selected_forms,
@@ -315,6 +379,61 @@ impl ProgramFormApi {
 
         self.evaluate_apply_print(request, catalog)
     }
+}
+
+fn form_return_contract(
+    operations: &[FormVmOperation],
+    task_managed: bool,
+    runtime_expectation: Option<&FormRuntimeEvidenceExpectation>,
+) -> Option<FormReturnContract> {
+    let return_binding = operations
+        .iter()
+        .find_map(|operation| match &operation.kind {
+            FormVmOperationKind::ReturnForm { binding } => Some(binding.clone()),
+            _ => None,
+        })?;
+    let evidence_binding = operations
+        .iter()
+        .find_map(|operation| match &operation.kind {
+            FormVmOperationKind::CollectEvidence { binding } => Some(binding.clone()),
+            _ => None,
+        })
+        .unwrap_or_else(|| "formvm.lifecycle-evidence".to_string());
+    let mut required_kinds = vec![
+        "executed_operations".to_string(),
+        "failed_operations".to_string(),
+    ];
+    if operations
+        .iter()
+        .any(|operation| matches!(operation.kind, FormVmOperationKind::CollectEvidence { .. }))
+    {
+        required_kinds.push("evidence_contract".to_string());
+    }
+    if task_managed {
+        required_kinds.extend([
+            "graph_processing_contract".to_string(),
+            "task_frame".to_string(),
+            "task_daemon_submission".to_string(),
+            "task_job".to_string(),
+        ]);
+    }
+    let requires_persisted_artifact = runtime_expectation
+        .is_some_and(FormRuntimeEvidenceExpectation::requires_persisted_artifact);
+    if requires_persisted_artifact {
+        required_kinds.push("dataset_artifact".to_string());
+    }
+    Some(FormReturnContract {
+        binding: return_binding,
+        require_successful_execution: true,
+        evidence: FormEvidenceContract {
+            binding: evidence_binding,
+            required_kinds,
+            expected_outputs: runtime_expectation
+                .map(|expectation| expectation.expected_outputs.clone())
+                .unwrap_or_default(),
+            requires_persisted_artifact,
+        },
+    })
 }
 
 impl Default for ProgramFormApi {
@@ -624,5 +743,49 @@ impl Error for FormProgramError {
             Self::Evaluate(error) => Some(error),
             Self::InvalidInputShape(_) | Self::Apply(_) | Self::Runtime(_) => None,
         }
+    }
+}
+
+#[cfg(test)]
+mod return_contract_tests {
+    use super::*;
+
+    #[test]
+    fn persisted_graph_outflow_requires_observed_dataset_artifact() {
+        let operations = vec![
+            FormVmOperation::new(
+                0,
+                Some("dataset.evidence".to_string()),
+                Some("organon".to_string()),
+                FormVmOperationKind::CollectEvidence {
+                    binding: "dataset.evidence-return".to_string(),
+                },
+            ),
+            FormVmOperation::new(
+                1,
+                Some("form.return".to_string()),
+                Some("organon".to_string()),
+                FormVmOperationKind::ReturnForm {
+                    binding: "eval-form.organic-unity".to_string(),
+                },
+            ),
+        ];
+        let expectation = FormRuntimeEvidenceExpectation {
+            return_policy: "persisted".to_string(),
+            expected_outputs: vec!["graphframe.dataset.graph".to_string()],
+        };
+
+        let contract = form_return_contract(&operations, true, Some(&expectation))
+            .expect("return operation should define a contract");
+
+        assert!(contract.evidence.requires_persisted_artifact);
+        assert_eq!(
+            contract.evidence.expected_outputs,
+            vec!["graphframe.dataset.graph"]
+        );
+        assert!(contract
+            .evidence
+            .required_kinds
+            .contains(&"dataset_artifact".to_string()));
     }
 }

@@ -46,6 +46,7 @@ pub struct FormVmOperationReceipt {
 
 pub struct FormVmRuntimePreparation {
     graph_contract: Option<GraphAgentProcessingContract>,
+    evidence_expectation: Option<FormRuntimeEvidenceExpectation>,
     task_submission: Option<FormTaskSubmissionPlan>,
     task_job_receipt: Option<FormTaskJobReceipt>,
     pub receipts: Vec<FormVmOperationReceipt>,
@@ -71,6 +72,10 @@ impl FormVmRuntimePreparation {
 
     pub fn task_job_receipt(&self) -> Option<&FormTaskJobReceipt> {
         self.task_job_receipt.as_ref()
+    }
+
+    pub fn evidence_expectation(&self) -> Option<&FormRuntimeEvidenceExpectation> {
+        self.evidence_expectation.as_ref()
     }
 
     pub fn execute_task(
@@ -125,6 +130,19 @@ impl FormVmRuntimePreparation {
             );
         }
         Ok(self.task_job_receipt.as_ref())
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct FormRuntimeEvidenceExpectation {
+    pub return_policy: String,
+    pub expected_outputs: Vec<String>,
+}
+
+impl FormRuntimeEvidenceExpectation {
+    pub fn requires_persisted_artifact(&self) -> bool {
+        self.return_policy == "persisted"
     }
 }
 
@@ -303,6 +321,7 @@ pub fn prepare_linked_form_with_provider(
     task_runtime: &dyn FormTaskRuntime,
 ) -> Result<FormVmRuntimePreparation, String> {
     let mut graph_contract = None;
+    let mut evidence_expectation = None;
     let mut task_submission = None;
     let mut receipts = Vec::new();
 
@@ -344,6 +363,10 @@ pub fn prepare_linked_form_with_provider(
                         contract.transmission_spec().objective_identity
                     ),
                 ));
+                evidence_expectation = Some(FormRuntimeEvidenceExpectation {
+                    return_policy: contract.transmission_spec().return_policy.clone(),
+                    expected_outputs: contract.transmission_spec().expected_outputs.clone(),
+                });
                 graph_contract = Some(contract);
             }
             FormVmOperationKind::ConstituteTask { binding } => {
@@ -416,6 +439,7 @@ pub fn prepare_linked_form_with_provider(
 
     Ok(FormVmRuntimePreparation {
         graph_contract,
+        evidence_expectation,
         task_submission,
         task_job_receipt: None,
         receipts,
@@ -526,6 +550,15 @@ mod tests {
         let contract = preparation
             .graph_contract()
             .expect("Graph processing contract should be determined");
+        let evidence_expectation = preparation
+            .evidence_expectation()
+            .expect("GraphFrame should declare its empirical return expectation");
+        assert_eq!(evidence_expectation.return_policy, "ephemeral");
+        assert_eq!(
+            evidence_expectation.expected_outputs,
+            vec!["graphframe.compute.result"]
+        );
+        assert!(!evidence_expectation.requires_persisted_artifact());
         let intent = contract.task_frame().program();
         assert_eq!(intent.program().len(), 1);
         assert_eq!(

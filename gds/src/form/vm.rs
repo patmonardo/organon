@@ -62,6 +62,8 @@ pub enum FormVmLifecycleEventKind {
     MorphPatternEmitted(String),
     EvaluationReady,
     EvaluationStarted,
+    TaskJobObserved { job_id: String, state: String },
+    TaskComponentsObserved { job_id: String, count: usize },
     EvaluationCompleted,
     FormReturned,
     CancellationRequested,
@@ -156,6 +158,36 @@ impl FormVmLifecycle {
     pub fn record_operation_mediation(&mut self, sequence: u64, evidence: FormVmEvidenceRef) {
         self.add_evidence(evidence);
         self.record(FormVmLifecycleEventKind::OperationMediated(sequence));
+    }
+
+    pub fn record_task_observation(
+        &mut self,
+        job_id: impl Into<String>,
+        state: impl Into<String>,
+        component_count: usize,
+    ) -> Result<(), FormVmLifecycleError> {
+        if self.state != FormVmLifecycleState::Evaluating {
+            return Err(FormVmLifecycleError::InvalidTransition {
+                from: self.state,
+                to: FormVmLifecycleState::Evaluating,
+            });
+        }
+        let job_id = job_id.into();
+        let state = state.into();
+        self.add_evidence(FormVmEvidenceRef::new("task_job", job_id.clone()));
+        self.add_evidence(FormVmEvidenceRef::new(
+            "task_component_count",
+            format!("{job_id}:{component_count}"),
+        ));
+        self.record(FormVmLifecycleEventKind::TaskJobObserved {
+            job_id: job_id.clone(),
+            state,
+        });
+        self.record(FormVmLifecycleEventKind::TaskComponentsObserved {
+            job_id,
+            count: component_count,
+        });
+        Ok(())
     }
 
     pub fn begin_evaluation(&mut self) -> Result<(), FormVmLifecycleError> {
@@ -690,6 +722,38 @@ mod tests {
         assert!(lifecycle
             .evidence
             .contains(&FormVmEvidenceRef::new("result", "graph://organon")));
+    }
+
+    #[test]
+    fn lifecycle_records_task_state_and_component_observations() {
+        let mut lifecycle = PureFormVm::new()
+            .run(&organon_program(), None)
+            .expect("FormVM should prepare evaluation")
+            .lifecycle;
+        lifecycle.begin_evaluation().unwrap();
+
+        lifecycle
+            .record_task_observation("task-job-1", "succeeded", 3)
+            .expect("evaluating lifecycle should accept task evidence");
+
+        assert!(lifecycle.events.iter().any(|event| {
+            event.event
+                == FormVmLifecycleEventKind::TaskJobObserved {
+                    job_id: "task-job-1".to_string(),
+                    state: "succeeded".to_string(),
+                }
+        }));
+        assert!(lifecycle.events.iter().any(|event| {
+            event.event
+                == FormVmLifecycleEventKind::TaskComponentsObserved {
+                    job_id: "task-job-1".to_string(),
+                    count: 3,
+                }
+        }));
+        assert!(lifecycle.evidence.contains(&FormVmEvidenceRef::new(
+            "task_component_count",
+            "task-job-1:3"
+        )));
     }
 
     #[test]

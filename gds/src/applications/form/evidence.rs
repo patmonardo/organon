@@ -3,6 +3,37 @@ use crate::applications::form::service_manifest::FormServiceManifest;
 use serde::Serialize;
 use serde_json::Value;
 
+use crate::form::{FormRunId, FormVmEvidenceRef};
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct FormEvidenceCollectionRequest {
+    pub run_id: FormRunId,
+    pub linked_form_id: String,
+    pub binding: String,
+    pub task_job_id: Option<String>,
+}
+
+/// Boundary through which an owning Dataset or GraphStore facility returns
+/// stable artifact references. Evidence bodies never cross this interface.
+pub trait FormEvidenceProvider: Send + Sync {
+    fn collect(
+        &self,
+        request: &FormEvidenceCollectionRequest,
+    ) -> Result<Vec<FormVmEvidenceRef>, String>;
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct DeferredFormEvidenceProvider;
+
+impl FormEvidenceProvider for DeferredFormEvidenceProvider {
+    fn collect(
+        &self,
+        _request: &FormEvidenceCollectionRequest,
+    ) -> Result<Vec<FormVmEvidenceRef>, String> {
+        Ok(Vec::new())
+    }
+}
+
 pub fn compose<T: Serialize>(
     program_form: &T,
     program_features: Value,

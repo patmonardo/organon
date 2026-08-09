@@ -31,6 +31,24 @@ mod tests {
     use crate::types::graph_store::DefaultGraphStore;
     use crate::types::random::RandomGraphConfig;
 
+    struct TestEvidenceProvider;
+
+    impl crate::applications::form::evidence::FormEvidenceProvider for TestEvidenceProvider {
+        fn collect(
+            &self,
+            request: &crate::applications::form::evidence::FormEvidenceCollectionRequest,
+        ) -> Result<Vec<crate::form::FormVmEvidenceRef>, String> {
+            let job_id = request
+                .task_job_id
+                .as_deref()
+                .ok_or_else(|| "test evidence requires a task job".to_string())?;
+            Ok(vec![crate::form::FormVmEvidenceRef::new(
+                "dataset_artifact",
+                format!("dataset://form-runs/{}/{job_id}", request.run_id.as_str()),
+            )])
+        }
+    }
+
     fn sample_program() -> ProgramSpec {
         ProgramSpec {
             form: FormShape::new(
@@ -171,6 +189,10 @@ mod tests {
             .expect("completed Form run should be registered");
         assert_eq!(managed.linked_form_id, print.linked_form.form_id);
         assert_eq!(managed.outcome, print.vm_lifecycle.outcome);
+        let inspected_report = api
+            .inspect_run_report(&print.run_report.run_id)
+            .expect("completed Form run should expose a report projection");
+        assert_eq!(inspected_report, print.run_report);
     }
 
     #[test]
@@ -219,6 +241,7 @@ mod tests {
         );
 
         let print = ProgramFormApi::new()
+            .with_evidence_provider(Arc::new(TestEvidenceProvider))
             .evaluate_apply_print(request, catalog)
             .expect("Organon Form should execute through task daemon");
 
@@ -231,6 +254,42 @@ mod tests {
         assert_eq!(print.apply.executed.len(), 1);
         assert_eq!(print.apply.executed[0].spec_binding, "graph_task_daemon");
         assert_eq!(print.run_report.task_jobs, vec![receipt.job_id.clone()]);
+        let return_judgment = print
+            .run_report
+            .return_judgment
+            .as_ref()
+            .expect("returned Organon Form should include a return judgment");
+        assert!(return_judgment.satisfied);
+        assert!(return_judgment.missing_evidence_kinds.is_empty());
+        assert!(print.run_report.return_contract.is_some());
+        assert!(print.run_report.evidence_records.iter().any(|evidence| {
+            evidence.kind == "task_job"
+                && evidence.authority == crate::form::FormEvidenceAuthority::TaskDaemon
+                && evidence.status == crate::form::FormEvidenceStatus::Observed
+                && !evidence.body_embedded
+        }));
+        assert!(print.vm_lifecycle.events.iter().any(|event| matches!(
+            &event.event,
+            crate::form::FormVmLifecycleEventKind::TaskJobObserved { job_id, state }
+                if job_id == &receipt.job_id && state == "succeeded"
+        )));
+        assert!(print.run_report.evidence_records.iter().any(|evidence| {
+            evidence.kind == "task_component_count"
+                && evidence.authority == crate::form::FormEvidenceAuthority::TaskDaemon
+                && evidence.status == crate::form::FormEvidenceStatus::Observed
+        }));
+        assert!(print.run_report.evidence_records.iter().any(|evidence| {
+            evidence.kind == "evidence_contract"
+                && evidence.authority == crate::form::FormEvidenceAuthority::Dataset
+                && evidence.status == crate::form::FormEvidenceStatus::Declared
+        }));
+        assert!(print.run_report.evidence_records.iter().any(|evidence| {
+            evidence.kind == "dataset_artifact"
+                && evidence.authority == crate::form::FormEvidenceAuthority::Dataset
+                && evidence.status == crate::form::FormEvidenceStatus::Observed
+                && evidence.reference.starts_with("dataset://form-runs/")
+                && !evidence.body_embedded
+        }));
         assert!(print
             .operation_receipts
             .iter()
