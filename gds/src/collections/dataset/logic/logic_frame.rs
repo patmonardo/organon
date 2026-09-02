@@ -8,6 +8,7 @@ use crate::collections::dataset::dsl::functions::model::preprocessing::padded_ev
 use crate::collections::dataset::language::tokenizer::Tokenizer;
 use crate::collections::dataset::language::{LanguageModel, LmError};
 use crate::collections::dataset::logic::LogicForm;
+use crate::collections::dataset::plan::MetaFrameMaterialization;
 use crate::form::program::ProgramFeature;
 use crate::ml::nlp::sem::logic::{LogicParseError, LogicParser};
 
@@ -53,6 +54,7 @@ pub struct LogicFrame<L> {
     corpus: Corpus,
     lm: L,
     forms: Vec<LogicForm>,
+    materialization: Option<MetaFrameMaterialization>,
 }
 
 impl<L> LogicFrame<L> {
@@ -61,7 +63,12 @@ impl<L> LogicFrame<L> {
     }
 
     pub fn with_forms(corpus: Corpus, lm: L, forms: Vec<LogicForm>) -> Self {
-        Self { corpus, lm, forms }
+        Self {
+            corpus,
+            lm,
+            forms,
+            materialization: None,
+        }
     }
 
     pub fn corpus(&self) -> &Corpus {
@@ -86,6 +93,18 @@ impl<L> LogicFrame<L> {
 
     pub fn forms_mut(&mut self) -> &mut Vec<LogicForm> {
         &mut self.forms
+    }
+
+    /// Bind the returned LogicFrame to the DataFrame appearance and MetaFrame
+    /// mediation that produced it. This is the executable form of
+    /// `LogicFrame = DataFrame | MetaFrame`; neither side is discarded.
+    pub fn with_materialization(mut self, materialization: MetaFrameMaterialization) -> Self {
+        self.materialization = Some(materialization);
+        self
+    }
+
+    pub fn materialization(&self) -> Option<&MetaFrameMaterialization> {
+        self.materialization.as_ref()
     }
 
     pub fn ingest_forms<I>(&mut self, forms: I)
@@ -189,5 +208,35 @@ mod tests {
         assert_eq!(semantic.parse_forms(), 1);
         assert!(semantic.forms()[0].parsed());
         assert!(semantic.forms()[1].error.is_some());
+    }
+
+    #[test]
+    fn logic_frame_preserves_dataframe_and_metaframe_return() {
+        use crate::collections::dataframe::{col, lit};
+        use crate::collections::dataset::plan::{EvalMode, MetaFrame, Plan, PlanEnv};
+        use crate::collections::dataset::Dataset;
+        use crate::tbl_def;
+
+        let dataset = Dataset::new(tbl_def!((value: i64 => [1, 2, 3])).expect("table"));
+        let meta_frame = MetaFrame::new(
+            Plan::from_dataset(dataset)
+                .with_model_anchor("model:numeric")
+                .with_feature_anchor("feature:positive")
+                .filter(col("value").gt(lit(1_i64))),
+        )
+        .expect("MetaFrame");
+        let materialization = meta_frame
+            .materialize(&PlanEnv::new(), EvalMode::Fit)
+            .expect("materialization");
+
+        let logic_frame = LogicFrame::new(
+            Corpus::from_texts(&["one two"]).expect("corpus"),
+            MLE::new(1),
+        )
+        .with_materialization(materialization);
+        let returned = logic_frame.materialization().expect("LogicFrame return");
+
+        assert_eq!(returned.appearance().row_count(), 2);
+        assert_eq!(returned.meta_frame().model_anchor(), "model:numeric");
     }
 }
