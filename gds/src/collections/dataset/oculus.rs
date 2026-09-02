@@ -4,17 +4,15 @@
 //! Rational/Empirical Concept to evaluation and returns its mediated result.
 
 use crate::collections::dataframe::GDSDataFrame;
+use crate::collections::dataset::concept_bus::{ConceptEnvelope, ConceptReceipt};
 use crate::collections::dataset::core::{
     DatasetLanguagePlugin, DatasetOrb, DatasetPluginError, DatasetPluginErrorClass,
-    DatasetPluginRequest, DatasetPluginResponse,
+    DatasetPluginRequest,
 };
 use std::sync::Arc;
 
-#[derive(Debug, Clone)]
-pub struct OculusEvaluation {
-    response: DatasetPluginResponse,
-    mediation_trace: Vec<String>,
-}
+/// Compatibility name for the receipt returned by the Concept Bus.
+pub type OculusEvaluation = ConceptReceipt;
 
 #[derive(Debug)]
 pub struct OculusDataFrameMediation {
@@ -41,20 +39,6 @@ impl OculusDataFrameMediation {
     }
 }
 
-impl OculusEvaluation {
-    pub fn response(&self) -> &DatasetPluginResponse {
-        &self.response
-    }
-
-    pub fn mediation_trace(&self) -> &[String] {
-        &self.mediation_trace
-    }
-
-    pub fn into_response(self) -> DatasetPluginResponse {
-        self.response
-    }
-}
-
 /// The only public entrance to Ocular evaluation.
 #[derive(Debug, Default, Clone, Copy)]
 pub struct OculusHandle {
@@ -71,7 +55,16 @@ impl OculusHandle {
         dataset: &mut DatasetOrb,
         request: &DatasetPluginRequest,
     ) -> Result<OculusEvaluation, DatasetPluginError> {
-        self.kernel.evaluate(dataset, request)
+        self.mediate(dataset, ConceptEnvelope::from_request(request.clone()))
+    }
+
+    /// Mediate one typed envelope over an already-established Dataset world.
+    pub fn mediate(
+        &self,
+        dataset: &mut DatasetOrb,
+        envelope: ConceptEnvelope,
+    ) -> Result<ConceptReceipt, DatasetPluginError> {
+        self.kernel.mediate(dataset, &envelope)
     }
 
     pub fn register_plugin(
@@ -92,7 +85,8 @@ impl OculusHandle {
     ) -> Result<OculusDataFrameMediation, DatasetPluginError> {
         let mut dataset = DatasetOrb::named(dataset_name, frame);
         self.register_plugin(&mut dataset, plugin)?;
-        let evaluation = self.evaluate(&mut dataset, request)?;
+        let evaluation =
+            self.mediate(&mut dataset, ConceptEnvelope::from_request(request.clone()))?;
         let output = if let Some(artifact_id) = &request.output_artifact_id {
             dataset
                 .artifact(artifact_id)
@@ -136,11 +130,18 @@ impl OculusKernel {
         dataset.register_plugin(plugin)
     }
 
-    fn evaluate(
+    fn mediate(
         &self,
         dataset: &mut DatasetOrb,
-        request: &DatasetPluginRequest,
-    ) -> Result<OculusEvaluation, DatasetPluginError> {
+        envelope: &ConceptEnvelope,
+    ) -> Result<ConceptReceipt, DatasetPluginError> {
+        if envelope.correlation_id().is_empty() {
+            return Err(DatasetPluginError::new(
+                DatasetPluginErrorClass::InvalidPayload,
+                "Oculus requires a non-empty Concept correlation identity",
+            ));
+        }
+        let request = envelope.request();
         if !request.concept.is_determinate() {
             return Err(DatasetPluginError::new(
                 DatasetPluginErrorClass::InvalidPayload,
@@ -179,9 +180,6 @@ impl OculusKernel {
             ),
         ];
 
-        Ok(OculusEvaluation {
-            response,
-            mediation_trace,
-        })
+        Ok(ConceptReceipt::new(envelope, response, mediation_trace))
     }
 }

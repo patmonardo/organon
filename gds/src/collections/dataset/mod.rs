@@ -55,6 +55,7 @@
 //! - The root should read like an organism, not like an implementation dump:
 //!   `core`, `dsl`, domain folds, and a small `lab` for speculative machinery.
 
+pub mod concept_bus;
 pub mod core;
 pub mod corpus;
 pub mod dsl;
@@ -74,6 +75,9 @@ pub mod workbench;
 //
 // Exports below use module-level glob re-exports for a uniform surface.
 
+pub use concept_bus::{
+    ConceptCorrelationId, ConceptEnvelope, ConceptJudgment, ConceptReceipt, ConceptRevision,
+};
 pub use core::*;
 pub use corpus::*;
 pub use dsl::namespaces::dataop::DataOpNs;

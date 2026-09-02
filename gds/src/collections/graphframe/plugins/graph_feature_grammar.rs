@@ -152,12 +152,15 @@ mod tests {
     use super::GRAPH_FEATURE_GRAMMAR_LANGUAGE_ID;
 
     use crate::collections::dataframe::GDSDataFrame;
+    use crate::collections::dataset::concept_bus::{
+        ConceptEnvelope, ConceptJudgment, ConceptRevision,
+    };
     use crate::collections::dataset::core::DatasetLanguagePlugin;
     use crate::collections::dataset::core::DatasetPluginPayload;
     use crate::collections::dataset::core::DatasetPluginValidationRequest;
     use crate::collections::dataset::core::{
-        DatasetConcept, DatasetEmpiricalConcept, DatasetPluginOperation, DatasetPluginRequest,
-        DatasetRationalConcept,
+        DatasetConcept, DatasetEmpiricalConcept, DatasetOrb, DatasetPluginOperation,
+        DatasetPluginRequest, DatasetRationalConcept,
     };
     use crate::collections::dataset::oculus::OculusHandle;
     use crate::collections::graphframe::feature_grammar::GraphFeatureAddress;
@@ -286,6 +289,81 @@ mod tests {
         );
         assert!(mediation
             .dataset()
+            .artifact("graph-feature-grammar:citation_graph")
+            .is_some());
+    }
+
+    #[test]
+    fn concept_bus_repeatedly_mediates_one_dataset_world() {
+        let body = GDSDataFrame::new(df!("edge" => ["a->b"]).unwrap());
+        let mut dataset = DatasetOrb::named("graph-world", body);
+        let eye = OculusHandle::new();
+        eye.register_plugin(
+            &mut dataset,
+            std::sync::Arc::new(GraphFeatureGrammarPlugin::new()),
+        )
+        .expect("register plugin once in the Dataset world");
+
+        let concept = DatasetConcept::new(
+            DatasetRationalConcept::new(
+                "model:citation-graph",
+                vec!["feature:density".into()],
+                "plan:derive-density",
+            ),
+            DatasetEmpiricalConcept::new(
+                "corpus:citation-edges",
+                "lm:graph-distribution",
+                "logic:graph-feature-laws",
+            ),
+        );
+        let compile = DatasetPluginRequest::new(
+            super::GRAPH_FEATURE_GRAMMAR_PLUGIN_ID,
+            DatasetPluginOperation::Compile,
+            concept.clone(),
+            DatasetPluginValidationRequest::new(
+                GRAPH_FEATURE_GRAMMAR_LANGUAGE_ID,
+                "workflow.graph.compile",
+                DatasetPluginPayload::typed(valid_form()),
+            ),
+        )
+        .with_output_artifact("graph-feature-grammar:citation_graph");
+        let compile_receipt = eye
+            .mediate(
+                &mut dataset,
+                ConceptEnvelope::new("concept.graph", compile).with_revision(3_u64),
+            )
+            .expect("compile over Concept Bus");
+
+        assert_eq!(compile_receipt.correlation_id().as_str(), "concept.graph");
+        assert_eq!(compile_receipt.revision(), ConceptRevision::new(3));
+        assert_eq!(compile_receipt.judgment(), ConceptJudgment::Admitted);
+        assert_eq!(
+            compile_receipt.produced_artifact_ids(),
+            &["graph-feature-grammar:citation_graph".to_string()]
+        );
+
+        let validate = DatasetPluginRequest::new(
+            super::GRAPH_FEATURE_GRAMMAR_PLUGIN_ID,
+            DatasetPluginOperation::Validate,
+            concept,
+            DatasetPluginValidationRequest::new(
+                GRAPH_FEATURE_GRAMMAR_LANGUAGE_ID,
+                "workflow.graph.validate",
+                DatasetPluginPayload::typed(valid_form()),
+            ),
+        );
+        let validate_receipt = eye
+            .mediate(
+                &mut dataset,
+                ConceptEnvelope::new("concept.graph", validate).with_revision(4_u64),
+            )
+            .expect("validate again over the same Concept Bus");
+
+        assert!(validate_receipt.judgment().is_admitted());
+        assert_eq!(validate_receipt.revision(), ConceptRevision::new(4));
+        assert!(validate_receipt.produced_artifact_ids().is_empty());
+        assert_eq!(dataset.plugins().len(), 1);
+        assert!(dataset
             .artifact("graph-feature-grammar:citation_graph")
             .is_some());
     }

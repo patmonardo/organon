@@ -8,6 +8,9 @@
 //! ```
 
 // Core SDK and Concept-return types
+pub use crate::collections::dataset::concept_bus::{
+    ConceptCorrelationId, ConceptEnvelope, ConceptJudgment, ConceptReceipt, ConceptRevision,
+};
 pub use crate::collections::dataset::core::catalog::DatasetCatalog;
 pub use crate::collections::dataset::core::dataset::{Dataset, DatasetFrameArtifact, DatasetOrb};
 pub use crate::collections::dataset::core::workspace::DatasetSemanticSupportFold;
