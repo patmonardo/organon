@@ -105,10 +105,11 @@ pub struct DatasetConfig {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum CollectionsBackend {
     // Core backends
-    Vec,   // Standard library vectors
-    Huge,  // Paged arrays
-    Arrow, // Apache Arrow
-    Std,   // Standard library arrays
+    Vec,    // Standard library vectors
+    Huge,   // Paged arrays
+    Arrow,  // Apache Arrow
+    Polars, // Polars DataFrame and lazy query plans
+    Std,    // Standard library arrays
 
     // Extension backends
     Ndarray,     // ndarray integration

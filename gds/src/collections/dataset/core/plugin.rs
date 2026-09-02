@@ -10,12 +10,17 @@ use std::collections::BTreeMap;
 use std::fmt;
 use std::sync::Arc;
 
+use crate::collections::dataframe::GDSDataFrame;
+use crate::collections::dataset::core::artifact::{DatasetArtifactKind, DatasetArtifactProfile};
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum DatasetPluginErrorClass {
     DuplicatePlugin,
     PluginNotFound,
     InvalidPayload,
     PluginExecution,
+    MissingArtifact,
+    ArtifactConflict,
 }
 
 impl DatasetPluginErrorClass {
@@ -25,7 +30,162 @@ impl DatasetPluginErrorClass {
             Self::PluginNotFound => "PluginNotFound",
             Self::InvalidPayload => "InvalidPayload",
             Self::PluginExecution => "PluginExecution",
+            Self::MissingArtifact => "MissingArtifact",
+            Self::ArtifactConflict => "ArtifactConflict",
         }
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum DatasetPluginOperation {
+    Validate,
+    Compile,
+    Execute,
+    Materialize,
+}
+
+macro_rules! semantic_ref {
+    ($name:ident) => {
+        #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+        pub struct $name(String);
+
+        impl $name {
+            pub fn new(value: impl Into<String>) -> Self {
+                Self(value.into())
+            }
+
+            pub fn as_str(&self) -> &str {
+                &self.0
+            }
+
+            pub fn is_empty(&self) -> bool {
+                self.0.is_empty()
+            }
+        }
+
+        impl From<&str> for $name {
+            fn from(value: &str) -> Self {
+                Self::new(value)
+            }
+        }
+
+        impl From<String> for $name {
+            fn from(value: String) -> Self {
+                Self::new(value)
+            }
+        }
+    };
+}
+
+semantic_ref!(DatasetModelRef);
+semantic_ref!(DatasetFeatureRef);
+semantic_ref!(DatasetPlanRef);
+semantic_ref!(DatasetCorpusRef);
+semantic_ref!(DatasetLanguageModelRef);
+semantic_ref!(DatasetLogicRef);
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DatasetRationalConcept {
+    pub model: DatasetModelRef,
+    pub features: Vec<DatasetFeatureRef>,
+    pub plan: DatasetPlanRef,
+}
+
+impl DatasetRationalConcept {
+    pub fn new(
+        model: impl Into<DatasetModelRef>,
+        features: Vec<DatasetFeatureRef>,
+        plan: impl Into<DatasetPlanRef>,
+    ) -> Self {
+        Self {
+            model: model.into(),
+            features,
+            plan: plan.into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DatasetEmpiricalConcept {
+    pub corpus: DatasetCorpusRef,
+    pub language_model: DatasetLanguageModelRef,
+    pub logic: DatasetLogicRef,
+}
+
+impl DatasetEmpiricalConcept {
+    pub fn new(
+        corpus: impl Into<DatasetCorpusRef>,
+        language_model: impl Into<DatasetLanguageModelRef>,
+        logic: impl Into<DatasetLogicRef>,
+    ) -> Self {
+        Self {
+            corpus: corpus.into(),
+            language_model: language_model.into(),
+            logic: logic.into(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DatasetPluginCapabilities {
+    pub operations: Vec<DatasetPluginOperation>,
+    pub consumes: Vec<DatasetArtifactKind>,
+    pub produces: Vec<DatasetArtifactKind>,
+    pub polars_lazy: bool,
+}
+
+impl DatasetPluginCapabilities {
+    pub fn new(operations: Vec<DatasetPluginOperation>) -> Self {
+        Self {
+            operations,
+            consumes: Vec::new(),
+            produces: Vec::new(),
+            polars_lazy: false,
+        }
+    }
+
+    pub fn with_consumes(mut self, kinds: Vec<DatasetArtifactKind>) -> Self {
+        self.consumes = kinds;
+        self
+    }
+
+    pub fn with_produces(mut self, kinds: Vec<DatasetArtifactKind>) -> Self {
+        self.produces = kinds;
+        self
+    }
+
+    pub fn with_polars_lazy(mut self, enabled: bool) -> Self {
+        self.polars_lazy = enabled;
+        self
+    }
+
+    pub fn supports(&self, operation: DatasetPluginOperation) -> bool {
+        self.operations.contains(&operation)
+    }
+}
+
+/// The two mediated moments of a Concept admitted as a Dataset plugin.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct DatasetConcept {
+    pub rational: DatasetRationalConcept,
+    pub empirical: DatasetEmpiricalConcept,
+}
+
+impl DatasetConcept {
+    pub fn new(rational: DatasetRationalConcept, empirical: DatasetEmpiricalConcept) -> Self {
+        Self {
+            rational,
+            empirical,
+        }
+    }
+
+    pub fn is_determinate(&self) -> bool {
+        !self.rational.model.is_empty()
+            && !self.rational.features.is_empty()
+            && !self.rational.plan.is_empty()
+            && !self.empirical.corpus.is_empty()
+            && !self.empirical.language_model.is_empty()
+            && !self.empirical.logic.is_empty()
     }
 }
 
@@ -92,6 +252,65 @@ impl DatasetPluginValidationRequest {
             language_id: language_id.into(),
             workflow_id: workflow_id.into(),
             payload,
+        }
+    }
+}
+
+#[derive(Clone)]
+pub struct DatasetPluginRequest {
+    pub plugin_id: String,
+    pub operation: DatasetPluginOperation,
+    pub concept: DatasetConcept,
+    pub input_artifact_ids: Vec<String>,
+    pub output_artifact_id: Option<String>,
+    pub validation: DatasetPluginValidationRequest,
+}
+
+impl DatasetPluginRequest {
+    pub fn new(
+        plugin_id: impl Into<String>,
+        operation: DatasetPluginOperation,
+        concept: DatasetConcept,
+        validation: DatasetPluginValidationRequest,
+    ) -> Self {
+        Self {
+            plugin_id: plugin_id.into(),
+            operation,
+            concept,
+            input_artifact_ids: Vec::new(),
+            output_artifact_id: None,
+            validation,
+        }
+    }
+
+    pub fn with_input_artifact(mut self, artifact_id: impl Into<String>) -> Self {
+        self.input_artifact_ids.push(artifact_id.into());
+        self
+    }
+
+    pub fn with_output_artifact(mut self, artifact_id: impl Into<String>) -> Self {
+        self.output_artifact_id = Some(artifact_id.into());
+        self
+    }
+}
+
+#[derive(Debug, Clone)]
+pub struct DatasetPluginArtifact {
+    pub artifact_id: String,
+    pub table: GDSDataFrame,
+    pub profile: DatasetArtifactProfile,
+}
+
+impl DatasetPluginArtifact {
+    pub fn new(
+        artifact_id: impl Into<String>,
+        table: GDSDataFrame,
+        profile: DatasetArtifactProfile,
+    ) -> Self {
+        Self {
+            artifact_id: artifact_id.into(),
+            table,
+            profile,
         }
     }
 }
@@ -177,18 +396,71 @@ impl DatasetPluginValidationReport {
     }
 }
 
+#[derive(Debug, Clone)]
+pub struct DatasetPluginResponse {
+    pub operation: DatasetPluginOperation,
+    pub report: DatasetPluginValidationReport,
+    pub artifacts: Vec<DatasetPluginArtifact>,
+    pub provenance: BTreeMap<String, String>,
+}
+
+impl DatasetPluginResponse {
+    pub fn new(operation: DatasetPluginOperation, report: DatasetPluginValidationReport) -> Self {
+        Self {
+            operation,
+            report,
+            artifacts: Vec::new(),
+            provenance: BTreeMap::new(),
+        }
+    }
+
+    pub fn with_artifact(mut self, artifact: DatasetPluginArtifact) -> Self {
+        self.artifacts.push(artifact);
+        self
+    }
+
+    pub fn with_provenance(mut self, key: impl Into<String>, value: impl Into<String>) -> Self {
+        self.provenance.insert(key.into(), value.into());
+        self
+    }
+}
+
 pub trait DatasetLanguagePlugin: Send + Sync {
     fn plugin_id(&self) -> &'static str;
 
     fn language_id(&self) -> &'static str;
 
+    fn capabilities(&self) -> DatasetPluginCapabilities {
+        DatasetPluginCapabilities::new(vec![DatasetPluginOperation::Validate])
+    }
+
     fn validate(
         &self,
         request: &DatasetPluginValidationRequest,
     ) -> Result<DatasetPluginValidationReport, DatasetPluginError>;
+
+    fn execute(
+        &self,
+        request: &DatasetPluginRequest,
+    ) -> Result<DatasetPluginResponse, DatasetPluginError> {
+        if !self.capabilities().supports(request.operation) {
+            return Err(DatasetPluginError::new(
+                DatasetPluginErrorClass::PluginExecution,
+                format!(
+                    "plugin {} does not support operation {:?}",
+                    self.plugin_id(),
+                    request.operation
+                ),
+            ));
+        }
+        let report = self.validate(&request.validation)?;
+        Ok(DatasetPluginResponse::new(request.operation, report)
+            .with_provenance("plugin_id", self.plugin_id())
+            .with_provenance("workflow_id", request.validation.workflow_id.clone()))
+    }
 }
 
-#[derive(Default)]
+#[derive(Clone, Default)]
 pub struct DatasetPluginRegistry {
     plugins: BTreeMap<String, Arc<dyn DatasetLanguagePlugin>>,
 }
@@ -237,6 +509,29 @@ impl DatasetPluginRegistry {
             )
         })?;
         plugin.validate(request)
+    }
+
+    pub fn execute(
+        &self,
+        request: &DatasetPluginRequest,
+    ) -> Result<DatasetPluginResponse, DatasetPluginError> {
+        let plugin = self.plugins.get(&request.plugin_id).ok_or_else(|| {
+            DatasetPluginError::new(
+                DatasetPluginErrorClass::PluginNotFound,
+                format!("plugin {} is not registered", request.plugin_id),
+            )
+        })?;
+        if !plugin.capabilities().supports(request.operation) {
+            return Err(DatasetPluginError::new(
+                DatasetPluginErrorClass::PluginExecution,
+                format!(
+                    "plugin {} does not support operation {:?}",
+                    plugin.plugin_id(),
+                    request.operation
+                ),
+            ));
+        }
+        plugin.execute(request)
     }
 }
 

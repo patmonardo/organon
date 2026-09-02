@@ -64,6 +64,7 @@ pub mod lab;
 pub mod language;
 pub mod logic;
 pub mod model;
+pub mod oculus;
 pub mod plan;
 pub mod prelude;
 pub mod workbench;
@@ -112,6 +113,7 @@ pub use lab::toolchain::{
 pub use language::*;
 pub use logic::*;
 pub use model::*;
+pub use oculus::{OculusDataFrameMediation, OculusEvaluation, OculusHandle};
 pub use plan::*;
 pub use workbench::catalog::dataset_workbench_track;
 pub use workbench::catalog::dataset_workbench_tracks;

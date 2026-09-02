@@ -4,6 +4,7 @@
 //! - **Huge**: Paged arrays for billions of elements
 //! - **Vec**: Enhanced standard library vectors
 //! - **Arrow**: Apache Arrow columnar arrays
+//! - **Polars**: DataFrame and lazy relational plans over columnar storage
 //! - **Extensions**: ndarray, GPU, distributed, compression, encryption
 //! - **Magic**: Auto-optimization, AI-powered features
 //!
@@ -102,12 +103,7 @@ pub use indirect_comparator::*;
 pub use long_multiset::*;
 pub use primitive::*;
 
-// Backend selection
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-pub enum CollectionsBackend {
-    Huge, // Paged arrays
-    #[default]
-    Vec, // Enhanced vectors
-    Arrow, // Apache Arrow
-    Std,  // Standard library
-}
+// Keep one canonical backend identity across configuration, factories, and
+// public Collections paths. This re-export preserves `collections::CollectionsBackend`
+// without maintaining a second, divergent enum.
+pub use crate::config::CollectionsBackend;

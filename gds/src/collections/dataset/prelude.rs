@@ -9,10 +9,13 @@
 
 // Core SDK and Concept-return types
 pub use crate::collections::dataset::core::catalog::DatasetCatalog;
-pub use crate::collections::dataset::core::dataset::Dataset;
+pub use crate::collections::dataset::core::dataset::{Dataset, DatasetFrameArtifact, DatasetOrb};
 pub use crate::collections::dataset::core::workspace::DatasetSemanticSupportFold;
 pub use crate::collections::dataset::corpus::Corpus;
 pub use crate::collections::dataset::logic::{LogicError, LogicForm, LogicFrame};
+pub use crate::collections::dataset::oculus::{
+    OculusDataFrameMediation, OculusEvaluation, OculusHandle,
+};
 pub use crate::collections::dataset::{DatasetArtifactKind, DatasetArtifactProfile};
 
 // Language fold: LanguageModel and statistical LM helpers
