@@ -6,6 +6,11 @@
 
 mod descriptor;
 mod frame;
+mod persistence;
 
 pub use descriptor::{PolarsBackendCapabilities, PolarsBackendDescriptor};
 pub use frame::PolarsFrameBackend;
+pub use persistence::{
+    PersistentFrameError, PersistentFrameFormat, PersistentFrameManifest, PersistentPolarsFrame,
+    PersistentPolarsStore,
+};

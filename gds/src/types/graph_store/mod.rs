@@ -5,6 +5,9 @@
 //! including schema, properties, topology, and filtered views.
 
 mod capabilities;
+mod core_graph;
+mod core_graph_loader;
+mod core_graph_store;
 mod database_id;
 mod database_info;
 mod default_graph_store;
@@ -19,6 +22,9 @@ mod schema_validation;
 mod shell_store_control;
 
 pub use capabilities::*;
+pub use core_graph::*;
+pub use core_graph_loader::*;
+pub use core_graph_store::*;
 pub use database_id::*;
 pub use database_info::*;
 pub use default_graph_store::*;

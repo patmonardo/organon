@@ -12,7 +12,9 @@ use std::sync::Arc;
 use crate::collections::dataframe::GDSExpr as Expr;
 use crate::collections::dataframe::PolarsSortMultipleOptions as SortMultipleOptions;
 
-use crate::collections::backends::polars::PolarsFrameBackend;
+use crate::collections::backends::polars::{
+    PersistentFrameError, PersistentPolarsFrame, PersistentPolarsStore, PolarsFrameBackend,
+};
 use crate::collections::dataframe::selectors::Selector;
 use crate::collections::dataframe::table::TableBuilder;
 use crate::collections::dataframe::GDSFrameError;
@@ -37,6 +39,7 @@ pub struct DatasetFrameArtifact {
     artifact_id: String,
     table: GDSDataFrame,
     profile: DatasetArtifactProfile,
+    persistent_snapshot: Option<PersistentPolarsFrame>,
 }
 
 impl DatasetFrameArtifact {
@@ -49,6 +52,7 @@ impl DatasetFrameArtifact {
             artifact_id: artifact_id.into(),
             table,
             profile,
+            persistent_snapshot: None,
         }
     }
 
@@ -62,6 +66,14 @@ impl DatasetFrameArtifact {
 
     pub fn profile(&self) -> &DatasetArtifactProfile {
         &self.profile
+    }
+
+    pub fn persistent_snapshot(&self) -> Option<&PersistentPolarsFrame> {
+        self.persistent_snapshot.as_ref()
+    }
+
+    fn attach_persistent_snapshot(&mut self, snapshot: PersistentPolarsFrame) {
+        self.persistent_snapshot = Some(snapshot);
     }
 }
 
@@ -172,6 +184,59 @@ impl DatasetOrb {
     ) -> Self {
         self.insert_artifact(artifact_id, table, profile);
         self
+    }
+
+    /// Atomically publish one cold artifact and attach its durable identity.
+    pub fn persist_artifact(
+        &mut self,
+        store: &PersistentPolarsStore,
+        artifact_id: &str,
+        snapshot_version: u64,
+    ) -> Result<PersistentPolarsFrame, PersistentFrameError> {
+        let artifact = self.artifacts.get(artifact_id).ok_or_else(|| {
+            PersistentFrameError::InvalidIdentity(format!(
+                "Dataset artifact {artifact_id} is not present"
+            ))
+        })?;
+        let mut provenance = BTreeMap::new();
+        provenance.insert("dataset_artifact_id".to_string(), artifact_id.to_string());
+        provenance.insert(
+            "dataset_artifact_kind".to_string(),
+            artifact.profile().primary_kind().to_string(),
+        );
+        if let Some(name) = &self.name {
+            provenance.insert("dataset_name".to_string(), name.clone());
+        }
+        let snapshot = store.publish_with_provenance(
+            artifact_id,
+            snapshot_version,
+            PolarsFrameBackend::from_dataframe(artifact.table().clone()),
+            provenance,
+        )?;
+        self.artifacts
+            .get_mut(artifact_id)
+            .expect("artifact remains present during synchronous publication")
+            .attach_persistent_snapshot(snapshot.clone());
+        Ok(snapshot)
+    }
+
+    /// Restore a verified persistent frame as a named cold Dataset artifact.
+    pub fn restore_artifact(
+        &mut self,
+        snapshot: PersistentPolarsFrame,
+        profile: DatasetArtifactProfile,
+    ) -> Result<(), PersistentFrameError> {
+        let artifact_id = snapshot.manifest().artifact_id.clone();
+        if self.artifacts.contains_key(&artifact_id) {
+            return Err(PersistentFrameError::AlreadyExists(format!(
+                "Dataset artifact {artifact_id}"
+            )));
+        }
+        let table = snapshot.collect()?;
+        let mut artifact = DatasetFrameArtifact::new(artifact_id.clone(), table, profile);
+        artifact.attach_persistent_snapshot(snapshot);
+        self.artifacts.insert(artifact_id, artifact);
+        Ok(())
     }
 
     pub fn plugins(&self) -> &DatasetPluginRegistry {
@@ -562,5 +627,53 @@ mod tests {
             dataset.polars_backend().backend(),
             crate::config::CollectionsBackend::Polars
         );
+    }
+
+    #[test]
+    fn dataset_orb_attaches_and_restores_persistent_polars_artifacts() {
+        let root =
+            std::env::temp_dir().join(format!("gds-dataset-persistence-{}", uuid::Uuid::new_v4()));
+        let store = PersistentPolarsStore::new(&root);
+        let frame = GDSDataFrame::new(df!("text" => ["meaning emerges"]).unwrap());
+        let features = GDSDataFrame::new(df!("feature" => ["lemma"]).unwrap());
+        let mut dataset = DatasetOrb::named("semantic-world", frame).with_artifact(
+            "features",
+            features,
+            DatasetArtifactProfile::new(DatasetArtifactKind::FeatureMap),
+        );
+
+        let snapshot = dataset.persist_artifact(&store, "features", 1).unwrap();
+        assert_eq!(snapshot.manifest().snapshot_version, 1);
+        assert_eq!(
+            dataset
+                .artifact("features")
+                .unwrap()
+                .persistent_snapshot()
+                .unwrap()
+                .manifest()
+                .artifact_id,
+            "features"
+        );
+
+        let recovered = store.open("features", 1).unwrap();
+        let seed = GDSDataFrame::new(df!("seed" => [1_i64]).unwrap());
+        let mut restored = DatasetOrb::named("restored-world", seed);
+        restored
+            .restore_artifact(
+                recovered,
+                DatasetArtifactProfile::new(DatasetArtifactKind::FeatureMap),
+            )
+            .unwrap();
+        assert_eq!(
+            restored.artifact("features").unwrap().table().shape(),
+            (1, 1)
+        );
+        assert!(restored
+            .artifact("features")
+            .unwrap()
+            .persistent_snapshot()
+            .is_some());
+
+        std::fs::remove_dir_all(root).unwrap();
     }
 }
